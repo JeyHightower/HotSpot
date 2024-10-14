@@ -1,6 +1,6 @@
-import { csrfFetch } from './csrf';
-
 //contain all actions specific to the sessions user's info and session users redux reducers
+import { csrfFetch } from './csrf.js';
+
 
 //define action types
 const SET_USER = 'SET_USER';
@@ -42,7 +42,8 @@ const sessionReducer = (state = initialState, action) =>{
     }
 };
 
-//thunk for login
+//Login Thunk
+
 export const login = (user) => async (dispatch) => {
    const { credential, password } = user;
     const response = await csrfFetch('/api/session', {
@@ -58,7 +59,8 @@ export const login = (user) => async (dispatch) => {
 };
 
 
-//Thunk for restore Session
+//restore User Thunk
+
 export const restoreUser = () => async (dispatch) => {
     const response = await csrfFetch("/api/session");
     const data = await response.json();
@@ -66,7 +68,8 @@ export const restoreUser = () => async (dispatch) => {
     return response;
 };
 
-//Thunk for signup
+//Signup Thunk
+
 export const signup = (user) => async (dispatch) => {
     const { username, firstName, lastName, email, password } = user;
     const response = await csrfFetch("/api/users", {

@@ -1,3 +1,3 @@
-import LoginFormPage from './components/LoginFormPage';
+import LoginFormModal from './LoginFormModal';
 
-export { default } from './Login FormModal';
+export { default } from './LoginFormModal';
