@@ -22,19 +22,13 @@ export const removeUser = () => {
 
 //Session Reducer
 const initialState = {
-    user: null,
+    user: null
 };
 
 const sessionReducer = (state = initialState, action) =>{
     switch(action.type) {
         case SET_USER:
-            return { ...state, user: {
-                id: action.user.id,
-                email: action.user.email,
-                username: action.user.username,
-                firstName: action.user.firstName,
-                lastName: action.user.lastName,
-            }};
+            return { ...state, user: action.payload };
             case REMOVE_USER:
                 return { ...state, user: null };
                 default:
@@ -54,7 +48,7 @@ export const login = (user) => async (dispatch) => {
         }),
     });
     const data = await response.json();
-    dispatch(setUser (data.user));
+    dispatch(setUser(data.user));
     return response;
 };
 
@@ -100,4 +94,4 @@ export const logout = () => async (dispatch) => {
 
 
 
-export default sessionReducer;
+export default sessionReducer ;

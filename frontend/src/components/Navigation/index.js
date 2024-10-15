@@ -1,3 +1,7 @@
-import Navigation from './Navigation';
+import navigation from './Navigation';
+import profileButton from './ProfileButton';
+import OpenModalMenuItem from './OpenModalMenuItem';
 
-export default Navigation;
+// Export components as named exports for easier reusability
+export { profileButton, OpenModalMenuItem };
+export default navigation;
