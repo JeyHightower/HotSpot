@@ -1,4 +1,4 @@
-import express from "express";
+import express, { application } from "express";
 import "express-async-errors";
 import morgan from "morgan";
 import cors from "cors";
@@ -12,6 +12,18 @@ const { environment } = data;
 const isProduction = environment === "production";
 
 const app = express();
+
+app.use("/", (req,res,next) => {
+	console.log('hello world')
+	next();
+});
+app.get('/', (req,res) => {
+	console.log('please print')
+	res.send("Hello, World!");
+})
+
+
+
 app.use(morgan("dev"));
 
 app.use(cookieParser());
@@ -27,11 +39,21 @@ app.use(
 	csurf({
 		cookie: {
 			secure: isProduction,
-			sameSite: isProduction,
+			sameSite: isProduction && "Lax",
 			httpOnly: true,
 		},
 	}),
 );
+
+
+app.get('/api/csrf/restore', (req, res) => {
+    const csrfToken = req.csrfToken();
+    res.cookie('XSRF_TOKEN', csrfToken);
+    console.log('i am here!!!!!! --Flag1)\n\n')
+    return res.json({"XSRF-Token": csrfToken});
+})
+
+
 
 import { prisma } from "./dbclient.js";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";

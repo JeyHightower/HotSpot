@@ -3,7 +3,13 @@ const router = express.Router();
 
 import api from "./api.js";
 
+
+
+
+
+
 router.use("/api", api);
+
 
 
 //Static routes
@@ -34,8 +40,10 @@ router.get(/^(?!\/?api).*/, (req, res) => {
 //Add a XSRF-TOKEN cookie in development
 if(process.env["NODE_ENV"] !== 'production'){
     router.get('/api/csrf/restore', (req, res) => {
-        res.cookie('XSRF_TOKEN', req.csrfToken());
-        return res.json({});
+        const csrfToken = req.csrfToken();
+        res.cookie('XSRF_TOKEN', csrfToken);
+        console.log('i am here!!!!!! --Flag1)\n\n')
+        return res.json({"XSRF-Token": csrfToken});
     })
 }
 
@@ -44,6 +52,7 @@ router.get("/api/csrf/restore", (req, res) => {
 	const csrfToken = req.csrfToken();
 	res.cookie("XSRF-TOKEN", csrfToken);
     console.error('Generated CSRF token:', csrfToken);
+    console.log('I AM HERE ALSO!!!!!--FLAG \n\n')
 	res.status(200).json({
 		"XSRF-Token": csrfToken,
 	});
