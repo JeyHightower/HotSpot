@@ -36,7 +36,6 @@ router.get("/current", requireAuth, async (req, res) => {
 		const { spot, startDate, endDate, ...rest } = b;
 
 		const { images, ...spotRest } = spot;
-
 		return {
 			Spot: {
 				previewImage: images[0]?.url ?? "",
@@ -47,6 +46,8 @@ router.get("/current", requireAuth, async (req, res) => {
 			...rest,
 		};
 	});
+
+	where:""
 
 	return res.json({ Bookings: sequelized });
 });
