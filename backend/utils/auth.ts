@@ -22,7 +22,7 @@ const err = () => {
 };
 
 const expiresIn = parseInt(expiresInStr!);
-const secret = secretRaw ? secretRaw : err();
+const secret = secretRaw || err();
 
 export function setTokenCookie(
 	res: Response,
