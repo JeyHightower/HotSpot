@@ -6,6 +6,7 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import PropTypes from 'prop-types';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -74,5 +75,15 @@ function ProfileButton({ user }) {
     </>
   );
 }
+
+// Prop Type Validation
+ProfileButton.propTypes = {
+  user: PropTypes.shape({
+    username: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    email: PropTypes.string
+  })
+};
 
 export default ProfileButton;
