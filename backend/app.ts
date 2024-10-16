@@ -13,17 +13,6 @@ const isProduction = environment === "production";
 
 const app = express();
 
-app.use("/", (req,res,next) => {
-	console.log('hello world')
-	next();
-});
-app.get('/', (req,res) => {
-	console.log('please print')
-	res.send("Hello, World!");
-})
-
-
-
 app.use(morgan("dev"));
 
 app.use(cookieParser());
@@ -31,29 +20,25 @@ app.use(cookieParser());
 app.use(express.json());
 
 if (!isProduction) {
-	app.use(cors());
+  app.use(cors());
 }
 
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(
-	csurf({
-		cookie: {
-			secure: isProduction,
-			sameSite: isProduction && "Lax",
-			httpOnly: true,
-		},
-	}),
+  csurf({
+    cookie: {
+      secure: isProduction,
+      sameSite: isProduction ? "lax" : false,
+      httpOnly: true,
+    },
+  })
 );
 
-
-app.get('/api/csrf/restore', (req, res) => {
-    const csrfToken = req.csrfToken();
-    res.cookie('XSRF_TOKEN', csrfToken);
-    console.log('i am here!!!!!! --Flag1)\n\n')
-    return res.json({"XSRF-Token": csrfToken});
-})
-
-
+app.get("/api/csrf/restore", (req, res) => {
+  const csrfToken = req.csrfToken();
+  res.cookie("XSRF_TOKEN", csrfToken);
+  return res.json({ "XSRF-Token": csrfToken });
+});
 
 import { prisma } from "./dbclient.js";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
@@ -63,55 +48,54 @@ import routes from "./routes/index.js";
 app.use(routes);
 
 declare global {
-	export interface Error {
-		title?: string;
-		status?: number;
-		errors?: { [key: string]: any };
-	}
+  export interface Error {
+    title?: string;
+    status?: number;
+    errors?: { [key: string]: any };
+  }
 }
 
 app.use(async (_req, _res, next) => {
-	const err = new Error("Requested resource could not be found.") as Error & {
-		title: string;
-		errors: { message: string };
-		status: number;
-	};
-	err.title = "Resource not found";
-	err.errors = { message: "The requested resource couldn't be found" };
-	err.status = 404;
-	next(err);
+  const err = new Error("Requested resource could not be found.") as Error & {
+    title: string;
+    errors: { message: string };
+    status: number;
+  };
+  err.title = "Resource not found";
+  err.errors = { message: "The requested resource couldn't be found" };
+  err.status = 404;
+  next(err);
 });
 
 // @ts-ignore
 app.use((err, _req, _res, next) => {
-	if (err instanceof PrismaClientValidationError) {
-		err.title = "prisma validation error";
-		(err as any as { errors: string }).errors = err.message;
-	}
+  if (err instanceof PrismaClientValidationError) {
+    err.title = "prisma validation error";
+    (err as any as { errors: string }).errors = err.message;
+  }
 
-	next(err);
+  next(err);
 });
 
 // @ts-ignore
 app.use((err, _req, res, _next) => {
-	res.status(err.status || 500);
-	console.error(err);
-	const resp: {
-		title?: any;
-		message: any;
-		errors: any;
-		stack?: any;
-	} = {
-		message: err.message,
-		errors: err.errors,
-	};
+  res.status(err.status || 500);
+  console.error(err);
+  const resp: {
+    title?: any;
+    message: any;
+    errors: any;
+    stack?: any;
+  } = {
+    message: err.message,
+    errors: err.errors,
+  };
 
-	if (!isProduction) {
-		resp.title = err.title || "Server Error",
-		resp.stack = err.stack;
-	}
+  if (!isProduction) {
+    (resp.title = err.title || "Server Error"), (resp.stack = err.stack);
+  }
 
-	res.json(resp);
+  res.json(resp);
 });
 
 export { app, prisma };
