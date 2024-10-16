@@ -56,7 +56,7 @@ export function restoreUser(
 	if ("token" in req.cookies) {
 		token = req.cookies["token"];
 	}
-
+console.log('i am here in auth.ts!!!!!!!!!! --FLAG2)\n\n')
 	return jwt.verify(token ?? "", secret, {}, async (err, jwtPayload) => {
 		if (err) {
 			return next();

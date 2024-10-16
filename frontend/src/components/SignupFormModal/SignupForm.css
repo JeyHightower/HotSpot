@@ -1,0 +1,28 @@
+/* Basic styling example, customize as needed */
+.signup-form-container {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    padding: 20px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+  }
+  
+  .signup-form-container label {
+    margin-bottom: 10px;
+  }
+  
+  .signup-form-container input {
+    padding: 8px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+  }
+  
+  .signup-form-container button {
+    padding: 10px;
+    background-color: #007bff; /* Example blue button */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }

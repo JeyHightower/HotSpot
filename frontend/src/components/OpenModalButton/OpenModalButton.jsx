@@ -1,4 +1,5 @@
 import { useModal } from '../../context/Modal';
+import PropTypes from 'prop-types';
 
 function OpenModalButton({
     modalComponent,
@@ -15,4 +16,10 @@ function OpenModalButton({
     return <button onClick={onClick}>{buttonText}</button>;
 }
 
+OpenModalButton.propTypes = {
+    modalComponent: PropTypes.element.isRequired,
+    buttonText: PropTypes.string.isRequired,
+    onButtonClick: PropTypes.func,
+    onModalClose: PropTypes.func
+};
 export default OpenModalButton;

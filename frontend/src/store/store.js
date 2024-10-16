@@ -1,26 +1,27 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { thunk } from 'redux-thunk';
-import sessionReducer from './session';
+import sessionReducer from './session'; // Assuming your session reducer is here
 
-//create a rootReducer that calls combineReducers and passes in empty obj.
+// Combine reducers for your application
 const rootReducer = combineReducers({
-    session: sessionReducer,
+  session: sessionReducer 
+  // ... add other reducers as needed (e.g., for spots)
 });
 
-//init enhancer variable
+// Configure store enhancer (middleware and devtools)
 let enhancer;
 
-//enhancer will be set to diff store enhancers depending
-//on whether the Node env is development or production
-if (import.meta.env.MODE === "production") {
-  enhancer == applyMiddleware(thunk);
+if (import.meta.env.MODE === 'production') {
+  // In production, only apply thunk middleware
+  enhancer = applyMiddleware(thunk);
 } else {
-  const logger = (await import("redux-logger")).default;
-  const composeEnhancers =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  // In development, include redux-logger and devtools
+  const logger = (await import('redux-logger')).default;
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   enhancer = composeEnhancers(applyMiddleware(thunk, logger));
 }
 
+// Create and configure the Redux store
 const configureStore = (preloadedState) => {
   return createStore(rootReducer, preloadedState, enhancer);
 };

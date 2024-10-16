@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import Navigation from './components/Navigation';
+import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
 
 function Layout() {
@@ -9,9 +9,7 @@ function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true)
-    });
+    dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
   return (
@@ -30,6 +28,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <h1>Welcome!</h1>
       }
+      // ... add other routes here as needed
     ]
   }
 ]);

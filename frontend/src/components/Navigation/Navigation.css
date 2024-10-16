@@ -1,0 +1,22 @@
+/* Basic styling example, customize as needed */
+.navigation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+  }
+  
+  .navigation-container li {
+    list-style: none;
+    margin-right: 20px;
+  }
+  
+  .navigation-container a {
+    text-decoration: none;
+    color: black;
+  }
+  
+  .navigation-container a:hover {
+    color: #007bff; /* Example blue hover */
+  }
