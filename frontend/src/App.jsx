@@ -1,8 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import Navigation from './components/Navigation/Navigation';
-import * as sessionActions from './store/session';
+import { React, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  NavLink,
+} from "react-router-dom";
+import Navigation from "./components/Navigation/Navigation";
+import * as sessionActions from "./store/session";
+import "./App.css";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -14,8 +20,14 @@ function Layout() {
 
   return (
     <>
-      <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Outlet />}
+      <header className="app-header">
+        <NavLink to="/" className="app-logo">
+          {/*add app logo here*/}
+          HOTSPOTS
+        </NavLink>
+        <Navigation isLoaded={isLoaded} />
+      </header>
+      <main>{isLoaded && <Outlet />}</main>
     </>
   );
 }
@@ -25,12 +37,11 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: '/',
-        element: <h1>Welcome!</h1>
-      }
-      // ... add other routes here as needed
-    ]
-  }
+        path: "/",
+        element: <h1>Welcome!</h1>,
+      },
+    ],
+  },
 ]);
 
 function App() {

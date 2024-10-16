@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -16,19 +17,28 @@ function Navigation({ isLoaded }) {
     );
   } else {
     sessionLinks = (
-    <li>
+      <>
+       <li>
       <NavLink to="/login">Login</NavLink>
-    </li>
+       </li>
+       <li>
+      <NavLink to="/signup">Signup</NavLink>
+       </li>
+      </>
     );
   }
 
   return (
-    <ul className="navigation-container">
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
+    <nav className="navigation-container">
+      <div className="nav-left">
+       <NavLink to="/" className="logo-link">
+         <img src="" alt="HotSpot" className="logo" />
+       </NavLink>
+      </div>
+    <ul className="nav-right">
       {isLoaded && sessionLinks}
     </ul>
+    </nav>
   );
 }
 
