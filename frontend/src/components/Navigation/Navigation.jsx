@@ -1,9 +1,9 @@
-import React from "react";
+import { React, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import ProfileButton from "./ProfileButton";
-import { Modal } from "./Modal";
+import { Modal } from "../../context/Modal";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal"; // Corrected typo here
@@ -55,11 +55,11 @@ function Navigation({ isLoaded }) {
           <img src="" alt="HotSpot" className="logo" />
         </NavLink>
       </div>
-      //! Conditionally render navigation links based on isLoaded
+      {/*Conditionally render navigation links based on isLoaded*/}
       <ul className="nav-right">
         {isLoaded && sessionLinks} {/* Simplified conditional rendering */}
       </ul>
-      //!Render Modals
+      {/*Render Modals*/}
       <Modal onClose={() => setShowLoginModal(false)} show={showLoginModal}>
         <LoginFormModal />
       </Modal>

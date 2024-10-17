@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect} from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
@@ -69,13 +69,13 @@ function LoginFormModal() {
       <form onSubmit={handleSubmit} className="login-form-container">
         <div className="new-div">This is a new div!</div>
         <h2>Log In</h2>
-        //!unordered list to display any validation errors during login
+        {/* unordered list to display any validation errors during login */}
         <ul className="error-list">
           {Object.values(errors).map((error, index) => (
             <li key={index}>{error}</li>
           ))}
         </ul>
-        //!input field for username or email
+        {/* input field for username or email */}
         <label>
           Username or Email
           <input
@@ -87,7 +87,7 @@ function LoginFormModal() {
             required
           />
         </label>
-        //!input field for password
+        {/*input field for password */}
         <label>
           Password
           <input
@@ -99,11 +99,11 @@ function LoginFormModal() {
             required
           />
         </label>
-        //!button to submit the login form
+        {/*button to submit the login form*/}
         <button type="submit" disabled={isLoginDisabled}>
           Log In
         </button>
-        //! button to trigger a demo user login
+        {/*button to trigger a demo user login*/}
         <button type="button" onClick={handleDemoLogin}>
           Log in as Demo User{" "}
         </button>
