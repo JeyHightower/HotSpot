@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
 import * as sessionActions from "./store/session";
-import "./App.css";
+import "./index.css";
 
 function Layout() {
   const dispatch = useDispatch();
