@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { FaUserCircle } from "react-icons/fa";
 import * as sessionActions from "../../store/session";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 //! ProfileButton functional component
@@ -9,7 +10,7 @@ function ProfileButton({ user }) {
   const dispatch = useDispatch(); // Access the Redux dispatch function
   const [showMenu, setShowMenu] = useState(false); // State to manage the visibility of the user menu dropdown
   const ulRef = useRef(); // Ref to the <ul> element of the dropdown
-
+  const navigate = useNavigate(); // get the navigation function
   //! Function to toggle the user menu (show/hide)
   const toggleMenu = (e) => {
     e.stopPropagation(); // Prevent the click event from bubbling up to the document (which would close the menu immediately)
@@ -44,6 +45,7 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout()); // Dispatch the logout action to the Redux store
     closeMenu(); // Close the user menu after logout
+    navigate("/"); // Navigate to the homepage after logout
   };
 
   //! Determine the class name for the dropdown based on its visibility
@@ -61,6 +63,8 @@ function ProfileButton({ user }) {
         //! Conditionally render user info only if user is logged in
         {user && (
           <>
+            //! add Greeting
+            <li>Hello, {user.firstName}</li>
             //! Display the user's username, full name, and email
             <li>{user.username}</li>
             <li>
