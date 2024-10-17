@@ -9,6 +9,7 @@ import {
 import Navigation from "./components/Navigation/Navigation";
 import * as sessionActions from "./store/session";
 import "./index.css";
+import HomePage from "./components/Homepage/Homepage";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <h1>Welcome!</h1>,
+        element: <HomePage />,
       },
     ],
   },

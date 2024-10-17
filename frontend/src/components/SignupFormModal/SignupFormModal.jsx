@@ -1,20 +1,21 @@
-import { React, useState } from 'react';
-import * as sessionActions from '../../store/session';
-import { useDispatch } from 'react-redux';
-import { useModal } from '../../context/Modal';
-import './SignupForm.css';
+import { React, useState, useEffect } from "react";
+import * as sessionActions from "../../store/session";
+import { useDispatch } from "react-redux";
+import { useModal } from "../../context/Modal";
+import "./SignupForm.css";
 
 function SignupFormModal() {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+  //! Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
@@ -25,7 +26,7 @@ function SignupFormModal() {
           username,
           firstName,
           lastName,
-          password
+          password,
         })
       )
         .then(closeModal)
@@ -37,12 +38,42 @@ function SignupFormModal() {
         });
     }
     return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
+      confirmPassword:
+        "Confirm Password field must be the same as the Password field",
     });
   };
 
+  //!input Validation
+  const isSignupDisabled =
+    !email ||
+    !username ||
+    !firstName ||
+    !lastName ||
+    !password ||
+    !confirmPassword ||
+    username.length < 4 ||
+    password.length < 6;
+
+  //! reset Modal when it closes
+  useEffect(() => {
+    const resetModal = () => {
+      setEmail("");
+      setUsername("");
+      setFirstName("");
+      setLastName("");
+      setPassword("");
+      setConfirmPassword("");
+      setErrors({});
+    };
+    //! call resetModal when the modal closes
+    resetModal();
+
+    //! cleanup function (removes any event listeners optional)
+    return () => {};
+  }, [closeModal]);
+
   return (
-    <form onSubmit={handleSubmit} className="signup-form-container"> {/* Add container class */}
+    <form onSubmit={handleSubmit} className="signup-form-container">
       <h2>Sign Up</h2>
       <ul>
         {Object.values(errors).map((error, index) => (
@@ -103,7 +134,9 @@ function SignupFormModal() {
           required
         />
       </label>
-      <button type="submit">Sign Up</button>
+      <button type="submit" disabled={isSignupDisabled}>
+        Sign Up
+      </button>
     </form>
   );
 }
