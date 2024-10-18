@@ -1,33 +1,36 @@
 import { React, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom"; // Import useHistory
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import ProfileButton from "./ProfileButton";
 import { Modal } from "../../context/Modal";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
-import SignupFormModal from "../SignupFormModal"; // Corrected typo here
+import SignupFormModal from "../SignupFormModal"; 
 import "./Navigation.css";
 
-//!Navigation Functional Component
 function Navigation({ isLoaded }) {
-  //!get the current user's session information from the redux store.
   const sessionUser = useSelector((state) => state.session.user);
+  const history = useHistory(); // Get the history object for redirection
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
 
-  //! determine which links to display based on whether the user is logged in or not
   let sessionLinks;
-  //! If user IS logged in, render the ProfileButton component
   if (sessionUser) {
     sessionLinks = (
-      <li>
-        <ProfileButton user={sessionUser} />
-      </li>
+      <>
+        <li> 
+          <button onClick={() => history.push('/spots/create')}> 
+            Create a New Spot 
+          </button>
+        </li>
+        <li> 
+          <ProfileButton user={sessionUser} /> 
+        </li>
+      </>
     );
   } else {
-    //! If user IS NOT logged in, render the Log In and Sign Up buttons
     sessionLinks = (
       <>
         <li>
@@ -47,7 +50,7 @@ function Navigation({ isLoaded }) {
       </>
     );
   }
-  //! render the navigation bar jsx
+
   return (
     <nav className="navigation-container">
       <div className="nav-left">
@@ -55,11 +58,11 @@ function Navigation({ isLoaded }) {
           <img src="" alt="HotSpot" className="logo" />
         </NavLink>
       </div>
-      {/*Conditionally render navigation links based on isLoaded*/}
       <ul className="nav-right">
-        {isLoaded && sessionLinks} {/* Simplified conditional rendering */}
+        {isLoaded && sessionLinks} 
       </ul>
-      {/*Render Modals*/}
+
+      {/* Modal components (unchanged) */}
       <Modal onClose={() => setShowLoginModal(false)} show={showLoginModal}>
         <LoginFormModal />
       </Modal>
@@ -69,7 +72,7 @@ function Navigation({ isLoaded }) {
     </nav>
   );
 }
-//!prop type validations
+
 Navigation.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
 };
