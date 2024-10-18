@@ -9,7 +9,8 @@ import {
 import Navigation from "./components/Navigation/Navigation";
 import * as sessionActions from "./store/session";
 import "./index.css";
-import HomePage from "./components/Homepage/Homepage";
+import HomePage from "./components/Homepage";
+import SpotDetail from "./components/SpotDetail";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/spot/:id",
+        element: <SpotDetail />,
       },
     ],
   },
