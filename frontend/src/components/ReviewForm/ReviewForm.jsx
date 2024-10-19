@@ -5,11 +5,9 @@ import { createReview } from "../../store/reviews";
 import StarRating from "../StarRating";
 import "./ReviewForm.css";
 
-const ReviewForm = ({ spotId, onClose }) => {
+const ReviewForm = ({ spotId, onClose, onReviewSubmit }) => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.session.user);
 
-  
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [errors, setErrors] = useState({});

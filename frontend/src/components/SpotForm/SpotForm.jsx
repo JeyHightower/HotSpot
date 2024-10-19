@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createSpot } from "../../store/spots"; // Import the thunk to create a spot
@@ -51,6 +51,7 @@ const SpotForm = () => {
 
     // If validation passes, create a new spot object with the form data
     const newSpot = {
+      ownerId: currentUser.id,
       address,
       city,
       state,

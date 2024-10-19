@@ -170,9 +170,9 @@ const UpdateSpotForm = () => {
       {/* Form to update the spot */}
       <form onSubmit={handleSubmit}>
         {/* Where's Your Place Located? Section */}
-        <h3>Where's your place located?</h3>
+        <h3>Where is your place located?</h3>
         <p>
-          Guests will only get your exact address once they've booked a
+          Guests will only get your exact address once they have booked a
           reservation.
         </p>
 
@@ -265,7 +265,7 @@ const UpdateSpotForm = () => {
         <div className="form-section">
           <h3>Create a title for your spot</h3>
           <p>
-            Catch guests' attention with a spot title that highlights what makes
+            Catch guest attention with a spot title that highlights what makes
             your place special.
           </p>
           <label htmlFor="name">Name of your spot</label>
@@ -303,7 +303,7 @@ const UpdateSpotForm = () => {
         <div className="form-section">
           <h3>Add photos of your spot</h3>
           <p>
-            Showcase your spot's best features with high-quality photos. Guests
+            Showcase your spot  best features with high-quality photos. Guests
             will be able to see them when they book.
           </p>
           <label>Preview Image (required)</label>

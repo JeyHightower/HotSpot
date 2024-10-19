@@ -82,7 +82,7 @@ const ManageSpots = () => {
       ) : (
         // If the user has no spots, display a message and a link to create a spot
         <div className="no-spots-message">
-          <p>You don't have any spots yet.</p>
+          <p>You do Not have any spots yet.</p>
           <Link to="/spots/create" className="create-spot-link">
             Create a New Spot
           </Link>

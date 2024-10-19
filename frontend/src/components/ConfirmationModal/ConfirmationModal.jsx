@@ -12,6 +12,7 @@ const ConfirmationModal = ({
     onCancel,
 }) => {
     return (
+        show && (
         <Modal onClose={onCancel}>
             <div className="confirmation-modal">
                 <h2>{title}</h2>
@@ -26,6 +27,7 @@ const ConfirmationModal = ({
                 </div>
             </div>
         </Modal>
+    )
     );
 };
 

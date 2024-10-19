@@ -40,7 +40,7 @@ const SpotDetail = () => {
       }
     };
     fetchSpotAndReviews();
-  }, [dispatch, spotId]);
+  }, [dispatch, history, spotId]);
 
   // Fetch user reviews to check if the user has already reviewed the spot
   useEffect(() => {
@@ -56,7 +56,7 @@ const SpotDetail = () => {
       }
     };
     fetchCurrentUserReviews();
-  }, [currentUser, spotId]);
+  }, [currentUser, history, dispatch, spotId]);
 
   // While waiting for the spot data, display a loading message
   if (!spot) {

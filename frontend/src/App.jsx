@@ -11,9 +11,9 @@ import * as sessionActions from "./store/session";
 import "./index.css";
 import HomePage from "./components/Homepage";
 import SpotDetail from "./components/SpotDetail";
-import SpotForm from "../components/SpotForm";
+import SpotForm from "./components/SpotForm/SpotForm";
 import ManageSpots from "./components/ManageSpots/ManageSpots";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute"
 import UpdateSpotForm from "./components/UpdateSpotForm";
 
 function Layout() {
