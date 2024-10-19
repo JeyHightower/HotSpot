@@ -7,9 +7,11 @@ import { CREATE_SPOT, SET_SPOT_ERRORS } from "./spotConstants";
   - SET_SPOTS: Used to set an array of all spots.
   - CREATE_SPOT: Used to add a newly created spot to the Redux store.
   - SET_SPOT_ERRORS: Used to set validation errors for spot creation. 
+  - DELETE_SPOT: Used to remove a spot from the Redux store.
 */
 const SET_SPOT_DETAILS = "spots/SET_SPOT_DETAILS";
 const SET_SPOTS = "spots/SET_SPOTS";
+const DELETE_SPOT = "spots/DELETE_SPOT";
 
 // Action Creators
 export const setSpotDetails = (spot) => ({
@@ -22,10 +24,15 @@ export const setSpots = (spots) => ({
   payload: spots,
 });
 
-// Action creator to set spot errors
 export const setSpotErrors = (errors) => ({
   type: SET_SPOT_ERRORS,
   payload: errors,
+});
+
+// Action creator for deleting a spot
+export const removeSpot = (spotId) => ({
+  type: DELETE_SPOT,
+  payload: spotId,
 });
 
 // Thunk to create a new spot
@@ -39,10 +46,9 @@ export const createSpot = (spotData, imageUrls) => async (dispatch) => {
     if (response.ok) {
       const createdSpot = await response.json();
 
-      // Dispatch the CREATE_SPOT action to add the new spot to the Redux store
       dispatch({ type: CREATE_SPOT, payload: createdSpot });
 
-      // Upload images separately to the backend (if necessary)
+      // If you need to upload images separately to your backend:
       for (let i = 0; i < imageUrls.length; i++) {
         if (imageUrls[i]) {
           await csrfFetch(`/api/spots/${createdSpot.id}/images`, {
@@ -53,19 +59,17 @@ export const createSpot = (spotData, imageUrls) => async (dispatch) => {
         }
       }
 
-      return createdSpot; // Return the created spot for potential use in the component
+      return createdSpot;
     } else {
       const errorData = await response.json();
       if (errorData.errors) {
-        // Dispatch the SET_SPOT_ERRORS action if the backend returns validation errors
         dispatch(setSpotErrors(errorData.errors));
       }
-      // Re-throw the error so it can be handled in the component
       throw errorData;
     }
   } catch (error) {
     console.error("Error creating spot:", error);
-    throw error; // Re-throw for component-level error handling
+    throw error;
   }
 };
 
@@ -91,6 +95,24 @@ export const fetchSpots = () => async (dispatch) => {
   }
 };
 
+// Thunk to delete a spot
+export const deleteSpot = (spotId) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      dispatch(removeSpot(spotId));
+    } else {
+      const errorData = await response.json();
+      console.error("Error deleting spot:", errorData);
+    }
+  } catch (error) {
+    console.error("Error deleting spot:", error);
+  }
+};
+
 // Reducer
 const initialState = {
   allSpots: {},
@@ -105,16 +127,22 @@ const spotReducer = (state = initialState, action) => {
         ...state,
         allSpots: { ...state.allSpots, [action.payload.id]: action.payload },
       };
+
     case SET_SPOT_DETAILS:
       return { ...state, singleSpot: action.payload };
+
     case SET_SPOTS:
-      const normalizedSpots = action.payload.reduce((acc, spot) => {
-        acc[spot.id] = spot;
-        return acc;
-      }, {});
-      return { ...state, allSpots: normalizedSpots };
+      return { ...state, allSpots: action.payload };
+
     case SET_SPOT_ERRORS:
       return { ...state, errors: action.payload };
+
+    case DELETE_SPOT: {
+      const newState = { ...state };
+      delete newState.allSpots[action.payload];
+      return newState;
+    }
+
     default:
       return state;
   }
