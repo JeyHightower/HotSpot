@@ -11,7 +11,9 @@ import * as sessionActions from "./store/session";
 import "./index.css";
 import HomePage from "./components/Homepage";
 import SpotDetail from "./components/SpotDetail";
-import SpotForm from '../components/SpotForm'
+import SpotForm from "../components/SpotForm";
+import ManageSpots from "./components/ManageSpots/ManageSpots";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -25,7 +27,7 @@ function Layout() {
     <>
       <header className="app-header">
         <NavLink to="/" className="app-logo">
-          {/*add app logo here*/}
+          {/* Add your app logo here */}
           HOTSPOTS
         </NavLink>
         <Navigation isLoaded={isLoaded} />
@@ -44,14 +46,17 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/spot/:id",
+        path: "/spots/:spotId",
         element: <SpotDetail />,
       },
       {
         path: "/spots/create",
         element: <SpotForm />,
-      }
-
+      },
+      {
+        path: "/spots/manage",
+        element: <ProtectedRoute component={ManageSpots} />,
+      },
     ],
   },
 ]);
