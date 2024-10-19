@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createSpot } from "../../store/spots"; // Import the thunk to create a spot
 import "./SpotForm.css"; // Import CSS for styling
 
 const SpotForm = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const currentUser = useSelector((state) => state.session.user);
 
   // Initialize the state for all form fields
@@ -86,7 +86,7 @@ const SpotForm = () => {
         setErrors({}); // Clear any validation errors
 
         // Redirect the user to the newly created spot's details page
-        history.push(`/spots/${createdSpot.id}`);
+        navigate.push(`/spots/${createdSpot.id}`);
       }
     } catch (error) {
       // If an error occurs during spot creation

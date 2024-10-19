@@ -1,14 +1,14 @@
 // src/components/ManageSpots/ManageSpots.jsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchSpots, deleteSpot } from "../../store/spots";
 import ConfirmationModal from "../ConfirmationModal";
 import "./ManageSpots.css";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const currentUser = useSelector((state) => state.session.user);
   const spots = useSelector((state) => state.spots.allSpots); // Get all spots from the store
 
@@ -64,7 +64,7 @@ const ManageSpots = () => {
 
               {/* "Update" and "Delete" buttons */}
               <div className="spot-actions">
-                <button onClick={() => history.push(`/spots/${spot.id}/edit`)}>
+                <button onClick={() => navigate.push(`/spots/${spot.id}/edit`)}>
                   Update
                 </button>
                 <button

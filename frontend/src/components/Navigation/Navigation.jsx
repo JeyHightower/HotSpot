@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import ProfileButton from "./ProfileButton";
@@ -11,7 +11,7 @@ import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
-  const history = useHistory(); // For redirection
+  const navigate = useNavigate(); // For redirection
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -21,7 +21,7 @@ function Navigation({ isLoaded }) {
     sessionLinks = (
       <>
         <li>
-          <button onClick={() => history.push("/spots/create")}>
+          <button onClick={() => navigate.push("/spots/create")}>
             Create a New Spot
           </button>
         </li>

@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSpotDetails } from "../../store/spots";
-import { fetchUserReviews } from "../../store/reviews"; // Import the thunk to fetch user reviews
+import { fetchUserReviews, deleteReview } from "../../store/reviews"; // Import the thunk to fetch user reviews
 import ReviewForm from "../ReviewForm/ReviewForm";
 import ConfirmationModal from "../ConfirmationModal";
-import { deleteReview } from "../../store/reviews";
 import "./SpotDetail.css";
 
 const SpotDetail = () => {
   const { spotId } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // State variables
@@ -33,14 +32,14 @@ const SpotDetail = () => {
         setReviews(spotData.Reviews);
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          history.push("/not-found");
+          navigate.push("/not-found");
         } else {
           console.error("Error fetching spot details:", error);
         }
       }
     };
     fetchSpotAndReviews();
-  }, [dispatch, history, spotId]);
+  }, [dispatch, navigate, spotId]);
 
   // Fetch user reviews to check if the user has already reviewed the spot
   useEffect(() => {
@@ -56,7 +55,7 @@ const SpotDetail = () => {
       }
     };
     fetchCurrentUserReviews();
-  }, [currentUser, history, dispatch, spotId]);
+  }, [currentUser, navigate, dispatch, spotId]);
 
   // While waiting for the spot data, display a loading message
   if (!spot) {
@@ -109,7 +108,7 @@ const SpotDetail = () => {
         </div>
 
         {/* Button to redirect to reservation form (assuming you have a /reserve route) */}
-        <button onClick={() => history.push(`/spots/${spot.id}/reserve`)}>
+        <button onClick={() => navigate.push(`/spots/${spot.id}/reserve`)}>
           Reserve
         </button>
       </div>
