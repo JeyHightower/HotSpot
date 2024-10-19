@@ -1,8 +1,9 @@
 // src/components/ManageSpots/ManageSpots.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { fetchSpots, deleteSpot } from "../../store/spots";
+import ConfirmationModal from "../ConfirmationModal";
 import "./ManageSpots.css";
 
 const ManageSpots = () => {
@@ -20,6 +21,11 @@ const ManageSpots = () => {
     ? Object.values(spots).filter((spot) => spot.ownerId === currentUser.id)
     : []; // If currentUser is null, set ownedSpots to an empty array
 
+  //state to control the confirmation modal visibility
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  //state to restore the ID of the spot to be deleted
+  const [spotToDelete, setSpotToDelete] = useState(null);
+
   // Function to handle deleting a spot
   const handleDelete = async (spotId) => {
     await dispatch(deleteSpot(spotId));
@@ -36,7 +42,6 @@ const ManageSpots = () => {
         <ul className="spot-list">
           {ownedSpots.map((spot) => (
             <li key={spot.id} className="spot-item">
-              {/* Link to the spot details page */}
               <Link to={`/spots/${spot.id}`} className="spot-link">
                 <img
                   src={spot.previewImage}
@@ -62,7 +67,14 @@ const ManageSpots = () => {
                 <button onClick={() => history.push(`/spots/${spot.id}/edit`)}>
                   Update
                 </button>
-                <button onClick={() => handleDelete(spot.id)}>Delete</button>
+                <button
+                  onClick={() => {
+                    setSpotToDelete(spot.id); // Set the spot to be deleted
+                    setShowDeleteModal(true); // Open the confirmation modal
+                  }}
+                >
+                  Delete
+                </button>
               </div>
             </li>
           ))}
@@ -76,6 +88,18 @@ const ManageSpots = () => {
           </Link>
         </div>
       )}
+
+      {/* Confirmation Modal for deleting a spot */}
+      <ConfirmationModal
+        show={showDeleteModal}
+        title="Confirm Delete"
+        message="Are you sure you want to remove this spot?"
+        onConfirm={async () => {
+          await handleDelete(spotToDelete);
+          setShowDeleteModal(false);
+        }}
+        onCancel={() => setShowDeleteModal(false)}
+      />
     </div>
   );
 };
