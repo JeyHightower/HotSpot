@@ -14,6 +14,7 @@ import SpotDetail from "./components/SpotDetail";
 import SpotForm from "../components/SpotForm";
 import ManageSpots from "./components/ManageSpots/ManageSpots";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UpdateSpotForm from "./components/UpdateSpotForm";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "/spots/manage",
         element: <ProtectedRoute component={ManageSpots} />,
+      },
+      {
+        path: "/spots/:spotId/edit",
+        element: <ProtectedRoute component={UpdateSpotForm} />,
       },
     ],
   },

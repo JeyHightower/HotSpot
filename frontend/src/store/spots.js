@@ -12,6 +12,7 @@ import { CREATE_SPOT, SET_SPOT_ERRORS } from "./spotConstants";
 const SET_SPOT_DETAILS = "spots/SET_SPOT_DETAILS";
 const SET_SPOTS = "spots/SET_SPOTS";
 const DELETE_SPOT = "spots/DELETE_SPOT";
+const UPDATE_SPOT = "spots/UPDATE_SPOT";
 
 // Action Creators
 export const setSpotDetails = (spot) => ({
@@ -34,6 +35,52 @@ export const removeSpot = (spotId) => ({
   type: DELETE_SPOT,
   payload: spotId,
 });
+
+//Action Creator for updating a spot
+export const setUpdatedSpot = (spot) => ({
+  type: UPDATE_SPOT,
+  payload: spot,
+});
+
+//thunk to update existing spot
+export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
+  try {
+    //send a put request to the backend api to update the spot
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(spotData),
+    });
+    if (response.ok) {
+      //if update was successful
+      const updatedSpot = await response.json();
+
+      dispatch(setUpdatedSpot(updatedSpot));
+
+      if (imageUrls && imageUrls.length > 0) {
+        for (let i = 0; i < imageUrls.length; i++) {
+          if (imageUrls[i]) {
+            await csrfFetch(`/api/spots/${spotId}/images`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ url: imageUrls[i], preview: i === 0 }),
+            });
+          }
+        }
+      }
+      return updatedSpot;
+    } else {
+      const errorData = await response.json();
+      if (errorData.errors) {
+        dispatch(setSpotErrors(errorData.errors));
+      }
+      throw errorData;
+    }
+  } catch (error) {
+    console.error("Error updating spot:", error);
+    throw error;
+  }
+};
 
 // Thunk to create a new spot
 export const createSpot = (spotData, imageUrls) => async (dispatch) => {
@@ -133,7 +180,13 @@ const spotReducer = (state = initialState, action) => {
 
     case SET_SPOTS:
       return { ...state, allSpots: action.payload };
-
+    case UPDATE_SPOT: {
+      return {
+        ...state,
+        allSpots: { ...state.allSpots, [action.payload.id]: action.payload },
+        singleSpot: action.payload,
+      };
+    }
     case SET_SPOT_ERRORS:
       return { ...state, errors: action.payload };
 
