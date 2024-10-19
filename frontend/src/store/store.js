@@ -1,11 +1,16 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { thunk } from 'redux-thunk';
-import sessionReducer from './session'; // Assuming your session reducer is here
+import sessionReducer from './session'; 
+import spotsReducer from "./spots"
+import reviewsReducer from "./reviews"
 
 // Combine reducers for your application
 const rootReducer = combineReducers({
-  session: sessionReducer 
-  // ... add other reducers as needed (e.g., for spots)
+  session: sessionReducer,
+  spots: spotsReducer,
+  reviews: reviewsReducer
+
+ 
 });
 
 // Configure store enhancer (middleware and devtools)
