@@ -1,106 +1,34 @@
+/* Navigation.css */
 .navigation-container {
-  width: 100%;
-  background-color: #fff; /* Example: White background */
-  padding: 1rem 2rem; /* Example: Padding around the header */
   display: flex;
-  justify-content: space-between; /* Position logo and buttons */
+  justify-content: space-between;
   align-items: center;
-  position: fixed; /* Make the header sticky */
-  top: 0;
-  left: 0;
-  z-index: 100; /* Ensure header is above other content */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+  padding: 10px; /* Adjust padding as needed */
 }
 
 .nav-left {
-  /* Style the logo container */
+  display: flex;
+  align-items: center;
 }
 
-.logo-link {
-  /* Remove underline from the link */
-  text-decoration: none;
-}
-
-.logo {
-  height: 40px;  /* Adjust logo height as needed */
+.logo-link img {
+  width: 50px; /* Adjust logo size as needed */
+  height: auto;
 }
 
 .nav-right {
   display: flex;
-  align-items: center;
-  list-style: none; /* Remove list bullets */
-  margin: 0;
-  padding: 0;
+  list-style: none;
 }
 
 .nav-right li {
-  margin-left: 2rem; /* Add spacing between nav items */
+  margin-left: 20px; /* Space between nav items */
 }
 
-.nav-right a { 
-  text-decoration: none; /* Remove link underlines */
-  color: #333; /* Example link color */
-  font-weight: 500; /* make link txt bolder*/
-  transition: color 0.2s ease; /*smooth color transition*/
-}
-
-.nav-right a:hover {
-  color: #007bff; /* Change link color on hover */
-}
-
-/* Media Query for Responsiveness (Adjust breakpoint as needed)*/
+/* Responsive design */
 @media (max-width: 768px) {
   .navigation-container {
-    padding: 1rem; /* Reduce padding on smaller screens */
+      flex-direction: column; /* Stack items on smaller screens */
+      align-items: flex-start; /* Align items to the left */
   }
-
-  .nav-right li {
-    margin-left: 1.5rem; /* Reduce spacing between items */
-  }
-
-  .logo {
-    height: 30px; /* Make logo smaller */
-  }
-}
-
-/* Profile Dropdown */
-.profile-dropdown {
-  position: absolute; /* Position the dropdown relative to the parent (button) */
-  top: 100%; /* Position it below the button */
-  right: 0; /* Align to the right of the button */
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  padding: 1rem;
-  z-index: 10; /* Ensure it appears above other content */
-  list-style: none; /* Remove bullet points */
-  padding: 0;
-  width: 200px; /* Adjust width as needed */
-}
-
-.profile-dropdown.hidden {
-  display: none; /* Hide the dropdown when not active */
-}
-
-.profile-dropdown li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee; /* Add a separator between items */
-}
-
-.profile-dropdown li:last-child {
-  border-bottom: none; /* Remove separator from last item */
-}
-
-.profile-dropdown button {
-  background-color: transparent; /* Make logout button look like a link */
-  border: none;
-  padding: 0;
-  font-size: 1rem;
-  color: #333;
-  cursor: pointer;
-}
-
-.profile-dropdown button:hover {
-  text-decoration: underline;
 }

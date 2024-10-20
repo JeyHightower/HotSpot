@@ -52,16 +52,11 @@ function Navigation({ isLoaded }) {
 
   return (
     <nav className="navigation-container">
-      <div className="nav-left">
-        <NavLink to="/" className="logo-link">
-          <img src="../../Assets/hotspotLogo.jpg" alt="HotSpot" className="logo" />
-        </NavLink>
-      </div>
       <ul className="nav-right">{isLoaded && sessionLinks}</ul>
 
       {/* Conditionally render modals for login and signup */}
       {showLoginModal && (
-        <Modal onClose={() => setShowLoginModal(false)} show={showLoginModal}>
+        <Modal onClose={() => setShowLoginModal(false)} show ={showLoginModal}>
           <LoginFormModal />
         </Modal>
       )}
@@ -73,9 +68,5 @@ function Navigation({ isLoaded }) {
     </nav>
   );
 }
-
-Navigation.propTypes = {
-  isLoaded: PropTypes.bool.isRequired,
-};
 
 export default Navigation;
