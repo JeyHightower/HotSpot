@@ -10,19 +10,18 @@ import SignupFormModal from "../SignupFormModal";
 import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
-  const sessionUser = useSelector((state) => state.session.user);
-  const history = useNavigate(); // For redirection
+  const sessionUser  = useSelector((state) => state.session.user);
+  const navigate = useNavigate();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
 
   let sessionLinks;
-  if (sessionUser) {
-    // Links for authenticated users
+  if (sessionUser ) {
     sessionLinks = (
-      <>
+      <ul>
         <li>
-          <button onClick={() => history("/spots/create")}>
+          <button onClick={() => navigate("/spots/create")}>
             Create a New Spot
           </button>
         </li>
@@ -30,28 +29,23 @@ function Navigation({ isLoaded }) {
           <NavLink to="/spots/manage">Manage Spots</NavLink>
         </li>
         <li>
-          <ProfileButton user={sessionUser} />
+          <ProfileButton user={sessionUser } />
         </li>
-      </>
+      </ul>
     );
   } else {
-    // Links for unauthenticated users
     sessionLinks = (
-      <ul> {/* Correctly wrapped <li> elements in a <ul>  */}
-        <li>
-          <OpenModalMenuItem
-            itemText="Log In"
-            modalComponent={<LoginFormModal />}
-            onItemClick={() => setShowLoginModal(true)}
-          />
-        </li>
-        <li>
-          <OpenModalMenuItem
-            itemText="Sign Up"
-            modalComponent={<SignupFormModal />}
-            onItemClick={() => setShowSignupModal(true)}
-          />
-        </li>
+      <ul>
+        <OpenModalMenuItem
+          itemText="Log In"
+          modalComponent={<LoginFormModal />}
+          onItemClick={() => setShowLoginModal(true)}
+        />
+        <OpenModalMenuItem
+          itemText="Sign Up"
+          modalComponent={<SignupFormModal />}
+          onItemClick={() => setShowSignupModal(true)}
+        />
       </ul>
     );
   }
@@ -60,18 +54,22 @@ function Navigation({ isLoaded }) {
     <nav className="navigation-container">
       <div className="nav-left">
         <NavLink to="/" className="logo-link">
-          <img src="" alt="HotSpot" className="logo" />
+          <img src="path_to_your_logo_image" alt="HotSpot" className="logo" />
         </NavLink>
       </div>
       <ul className="nav-right">{isLoaded && sessionLinks}</ul>
 
-      {/* Modals for login and signup */}
-      <Modal onClose={() => setShowLoginModal(false)} show={showLoginModal}>
-        <LoginFormModal />
-      </Modal>
-      <Modal onClose={() => setShowSignupModal(false)} show={showSignupModal}>
-        <SignupFormModal />
-      </Modal>
+      {/* Conditionally render modals for login and signup */}
+      {showLoginModal && (
+        <Modal onClose={() => setShowLoginModal(false)} show={showLoginModal}>
+          <LoginFormModal />
+        </Modal>
+      )}
+      {showSignupModal && (
+        <Modal onClose={() => setShowSignupModal(false)} show={showSignupModal}>
+          <SignupFormModal />
+        </Modal>
+      )}
     </nav>
   );
 }

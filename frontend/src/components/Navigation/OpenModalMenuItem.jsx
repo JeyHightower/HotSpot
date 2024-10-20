@@ -22,7 +22,7 @@ function OpenModalMenuItem({
 }
 
 OpenModalMenuItem.propTypes = {
-  modalComponent: PropTypes.elementType.isRequired,
+  modalComponent: PropTypes.element.isRequired, // Changed to PropTypes.element
   itemText: PropTypes.string.isRequired,
   onItemClick: PropTypes.func,
   onModalClose: PropTypes.func
