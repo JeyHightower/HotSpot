@@ -54,7 +54,7 @@ function Navigation({ isLoaded }) {
     <nav className="navigation-container">
       <div className="nav-left">
         <NavLink to="/" className="logo-link">
-          <img src="path_to_your_logo_image" alt="HotSpot" className="logo" />
+          <img src="../../Assets/hotspotLogo.jpg" alt="HotSpot" className="logo" />
         </NavLink>
       </div>
       <ul className="nav-right">{isLoaded && sessionLinks}</ul>

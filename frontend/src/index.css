@@ -1,1 +1,49 @@
-/* TODO: Add sitewide styles */
+/* index.css */
+
+/* Logo styles */
+.app-logo .logo {
+    width: 50px; /* Adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 20px; /* Space between logo and navigation */
+  }
+  
+  /* Navigation styles */
+  .navigation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .nav-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-right ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-right li {
+    margin-right: 20px;
+  }
+  
+  .nav-right a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .nav-right a:hover {
+    color: #666;
+  }

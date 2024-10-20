@@ -13,7 +13,7 @@ import HomePage from "./components/Homepage";
 import SpotDetail from "./components/SpotDetail";
 import SpotForm from "./components/SpotForm/SpotForm";
 import ManageSpots from "./components/ManageSpots/ManageSpots";
-import ProtectedRoute from "./components/ProtectedRoute"
+import ProtectedRoute from "./components/ProtectedRoute";
 import UpdateSpotForm from "./components/UpdateSpotForm";
 
 function Layout() {
@@ -21,15 +21,14 @@ function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
+    dispatch(sessionActions.restoreUser ()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
   return (
     <>
       <header className="app-header">
         <NavLink to="/" className="app-logo">
-          {/* Add your app logo here */}
-          HOTSPOTS
+          <img src="../assets/hotspotLogo.jpg" alt="HotSpot Logo" className="logo" />
         </NavLink>
         <Navigation isLoaded={isLoaded} />
       </header>
