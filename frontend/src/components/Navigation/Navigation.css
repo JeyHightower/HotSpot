@@ -62,3 +62,45 @@
     height: 30px; /* Make logo smaller */
   }
 }
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: absolute; /* Position the dropdown relative to the parent (button) */
+  top: 100%; /* Position it below the button */
+  right: 0; /* Align to the right of the button */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  z-index: 10; /* Ensure it appears above other content */
+  list-style: none; /* Remove bullet points */
+  padding: 0;
+  width: 200px; /* Adjust width as needed */
+}
+
+.profile-dropdown.hidden {
+  display: none; /* Hide the dropdown when not active */
+}
+
+.profile-dropdown li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee; /* Add a separator between items */
+}
+
+.profile-dropdown li:last-child {
+  border-bottom: none; /* Remove separator from last item */
+}
+
+.profile-dropdown button {
+  background-color: transparent; /* Make logout button look like a link */
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.profile-dropdown button:hover {
+  text-decoration: underline;
+}

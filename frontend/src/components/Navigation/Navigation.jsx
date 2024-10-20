@@ -1,49 +1,81 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import ProfileButton from './ProfileButton';
-import './Navigation.css';
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
+import ProfileButton from "./ProfileButton";
+import { Modal } from "../../context/Modal";
+import OpenModalMenuItem from "./OpenModalMenuItem";
+import LoginFormModal from "../LoginFormModal";
+import SignupFormModal from "../SignupFormModal";
+import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
-  const sessionUser = useSelector(state => state.session.user);
+  const sessionUser  = useSelector((state) => state.session.user);
+  const navigate = useNavigate();
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
 
   let sessionLinks;
-  if (sessionUser) {
+  if (sessionUser ) {
     sessionLinks = (
-      <li>
-        <ProfileButton user={sessionUser} />
-      </li>
+      <ul>
+        <li>
+          <button onClick={() => navigate("/spots/create")}>
+            Create a New Spot
+          </button>
+        </li>
+        <li>
+          <NavLink to="/spots/manage">Manage Spots</NavLink>
+        </li>
+        <li>
+          <ProfileButton user={sessionUser } />
+        </li>
+      </ul>
     );
   } else {
     sessionLinks = (
-      <>
-       <li>
-      <NavLink to="/login">Login</NavLink>
-       </li>
-       <li>
-      <NavLink to="/signup">Signup</NavLink>
-       </li>
-      </>
+      <ul>
+        <OpenModalMenuItem
+          itemText="Log In"
+          modalComponent={<LoginFormModal />}
+          onItemClick={() => setShowLoginModal(true)}
+        />
+        <OpenModalMenuItem
+          itemText="Sign Up"
+          modalComponent={<SignupFormModal />}
+          onItemClick={() => setShowSignupModal(true)}
+        />
+      </ul>
     );
   }
 
   return (
     <nav className="navigation-container">
       <div className="nav-left">
-       <NavLink to="/" className="logo-link">
-         <img src="" alt="HotSpot" className="logo" />
-       </NavLink>
+        <NavLink to="/" className="logo-link">
+          <img src="path_to_your_logo_image" alt="HotSpot" className="logo" />
+        </NavLink>
       </div>
-    <ul className="nav-right">
-      {isLoaded && sessionLinks}
-    </ul>
+      <ul className="nav-right">{isLoaded && sessionLinks}</ul>
+
+      {/* Conditionally render modals for login and signup */}
+      {showLoginModal && (
+        <Modal onClose={() => setShowLoginModal(false)} show={showLoginModal}>
+          <LoginFormModal />
+        </Modal>
+      )}
+      {showSignupModal && (
+        <Modal onClose={() => setShowSignupModal(false)} show={showSignupModal}>
+          <SignupFormModal />
+        </Modal>
+      )}
     </nav>
   );
 }
 
 Navigation.propTypes = {
-  isLoaded: PropTypes.bool.isRequired
+  isLoaded: PropTypes.bool.isRequired,
 };
 
 export default Navigation;

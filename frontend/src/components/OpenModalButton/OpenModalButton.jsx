@@ -1,3 +1,4 @@
+import React from 'react';
 import { useModal } from '../../context/Modal';
 import PropTypes from 'prop-types';
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useModal } from '../../context/Modal';
 import PropTypes from 'prop-types';
 
@@ -21,7 +22,7 @@ function OpenModalMenuItem({
 }
 
 OpenModalMenuItem.propTypes = {
-  modalComponent: PropTypes.elementType.isRequired,
+  modalComponent: PropTypes.element.isRequired, // Changed to PropTypes.element
   itemText: PropTypes.string.isRequired,
   onItemClick: PropTypes.func,
   onModalClose: PropTypes.func

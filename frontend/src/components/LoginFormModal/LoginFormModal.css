@@ -1,28 +1,70 @@
-/* Basic styling example, customize as needed */
+/* Modal Container */
+.login-form-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  width: 400px; /* Adjust width as needed */
+}
+
+/* Form Container */
 .login-form-container {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    padding: 20px;
-    border: 1px solid lightgray;
-    border-radius: 5px;
-  }
-  
-  .login-form-container label {
-    margin-bottom: 10px;
-  }
-  
-  .login-form-container input {
-    padding: 8px;
-    border: 1px solid lightgray;
-    border-radius: 3px;
-  }
-  
-  .login-form-container button {
-    padding: 10px;
-    background-color: #007bff; /* Example blue button */
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
+  display: flex;
+  flex-direction: column;
+}
+
+/* Heading */
+.login-form-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+/* Labels */
+.login-form-container label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Input Fields */
+.login-form-container input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* Error List */
+.error-list {
+  color: red;
+  margin-bottom: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+/* Buttons */
+.login-form-container button {
+  padding: 0.8rem 1.5rem;
+  background-color: #007bff; /* Example - Customize! */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Disabled Button */
+.login-form-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Demo User Button */
+.login-form-container button:nth-child(2) { /* Selects the second button */
+  background-color: #6c757d; /* Example - Customize! */
+}
