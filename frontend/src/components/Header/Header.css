@@ -1,0 +1,37 @@
+/* src/components/Header/header.css */
+
+/* General styles for the header */
+.header {
+    display: flex;
+    justify-content: space-between; /* Align items to the ends */
+    align-items: center; /* Center items vertically */
+    padding: 10px 20px; /* Add some padding */
+    background-color: #f8f9fa; /* Light background color */
+}
+
+/* Logo styles */
+.logo-container img {
+    width: 100px; /* Set a specific width for the logo */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Auth buttons styles */
+.auth-buttons {
+    display: flex;
+    gap: 15px; /* Space between buttons */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .logo-container img {
+        width: 80px; /* Smaller logo on mobile */
+    }
+
+    .header {
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
+
+    .auth-buttons {
+        gap: 10px; /* Adjust gap for smaller screens */
+    }
+}

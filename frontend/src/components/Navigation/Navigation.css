@@ -1,22 +1,36 @@
 .app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0f0; 
+  border-bottom: 1px solid #ccc; 
+  z-index: 1000;
+}
+
+.header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  padding: 10px;
-  background-color: #f0f0f0; /* Add a background color if needed */
-  border-bottom: 1px solid #ccc; /* Add a bottom border if needed */
+  max-width: 1200px;
+  width: 100%; 
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .app-logo {
-  margin-right: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .logo {
-  width: 50px; /* Adjust the logo size as needed */
+  width: 50px; 
   height: 50px;
   object-fit: cover;
-  border-radius: 50%;
 }
 
 .navigation-container {
@@ -37,11 +51,17 @@
   margin-left: 20px;
 }
 
-.nav-right a {
-  text-decoration: none;
-  color: #333;
-}
-
-.nav-right a:hover {
-  color: #666;
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 10px;
+  }
+  
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .nav-right li {
+    margin-left: 10px;
+  }
 }
