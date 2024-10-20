@@ -8,7 +8,7 @@ import "./ManageSpots.css";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const history = useNavigate();
   const currentUser = useSelector((state) => state.session.user);
   const spots = useSelector((state) => state.spots.allSpots); // Get all spots from the store
 
@@ -64,7 +64,7 @@ const ManageSpots = () => {
 
               {/* "Update" and "Delete" buttons */}
               <div className="spot-actions">
-                <button onClick={() => navigate.push(`/spots/${spot.id}/edit`)}>
+                <button onClick={() => history.push(`/spots/${spot.id}/edit`)}>
                   Update
                 </button>
                 <button

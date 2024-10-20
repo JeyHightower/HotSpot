@@ -10,7 +10,7 @@ function ProfileButton({ user }) {
   const dispatch = useDispatch(); // Access the Redux dispatch function
   const [showMenu, setShowMenu] = useState(false); // State to manage the visibility of the user menu dropdown
   const ulRef = useRef(); // Ref to the <ul> element of the dropdown
-  const navigate = useNavigate(); // get the navigation function
+  const history = useNavigate(); // get the navigation function
   {/*Function to toggle the user menu (show/hide)*/}
   const toggleMenu = (e) => {
     e.stopPropagation(); // Prevent the click event from bubbling up to the document (which would close the menu immediately)
@@ -45,7 +45,7 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout()); // Dispatch the logout action to the Redux store
     closeMenu(); // Close the user menu after logout
-    navigate("/"); // Navigate to the homepage after logout
+    history("/"); // Navigate to the homepage after logout
   };
 
   {/*Determine the class name for the dropdown based on its visibility*/}

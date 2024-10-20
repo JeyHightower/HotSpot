@@ -6,7 +6,7 @@ import "./UpdateSpotForm.css";
 
 const UpdateSpotForm = () => {
   const { spotId } = useParams();
-  const navigate = useNavigate(); // Updated to useNavigate
+  const history = useNavigate(); // Updated to useNavigate
   const dispatch = useDispatch();
 
   // Select the spot details from the Redux store
@@ -67,7 +67,7 @@ const UpdateSpotForm = () => {
 
     //if the user is NOT the owner, redirect them to the spot details page
     if (!isOwner) {
-      navigate(`/spots/${spot.id}`);
+      history(`/spots/${spot.id}`);
       return;
     }
 

@@ -9,7 +9,7 @@ import "./SpotDetail.css";
 
 const SpotDetail = () => {
   const { spotId } = useParams();
-  const navigate = useNavigate();
+  const history = useNavigate();
   const dispatch = useDispatch();
 
   // State variables
@@ -32,14 +32,14 @@ const SpotDetail = () => {
         setReviews(spotData.Reviews);
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          navigate.push("/not-found");
+          history.push("/not-found");
         } else {
           console.error("Error fetching spot details:", error);
         }
       }
     };
     fetchSpotAndReviews();
-  }, [dispatch, navigate, spotId]);
+  }, [dispatch, history, spotId]);
 
   // Fetch user reviews to check if the user has already reviewed the spot
   useEffect(() => {
@@ -55,7 +55,7 @@ const SpotDetail = () => {
       }
     };
     fetchCurrentUserReviews();
-  }, [currentUser, navigate, dispatch, spotId]);
+  }, [currentUser, history, dispatch, spotId]);
 
   // While waiting for the spot data, display a loading message
   if (!spot) {
@@ -108,7 +108,7 @@ const SpotDetail = () => {
         </div>
 
         {/* Button to redirect to reservation form (assuming you have a /reserve route) */}
-        <button onClick={() => navigate.push(`/spots/${spot.id}/reserve`)}>
+        <button onClick={() => history.push(`/spots/${spot.id}/reserve`)}>
           Reserve
         </button>
       </div>

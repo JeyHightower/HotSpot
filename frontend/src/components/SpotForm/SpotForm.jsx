@@ -6,7 +6,7 @@ import "./SpotForm.css"; // Import CSS for styling
 
 const SpotForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const history = useNavigate();
   const currentUser = useSelector((state) => state.session.user);
 
   // Initialize the state for all form fields
@@ -86,7 +86,7 @@ const SpotForm = () => {
         setErrors({}); // Clear any validation errors
 
         // Redirect the user to the newly created spot's details page
-        navigate.push(`/spots/${createdSpot.id}`);
+        history.push(`/spots/${createdSpot.id}`);
       }
     } catch (error) {
       // If an error occurs during spot creation

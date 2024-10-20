@@ -11,7 +11,7 @@ import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
-  const navigate = useNavigate(); // For redirection
+  const history = useNavigate(); // For redirection
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -21,7 +21,7 @@ function Navigation({ isLoaded }) {
     sessionLinks = (
       <>
         <li>
-          <button onClick={() => navigate.push("/spots/create")}>
+          <button onClick={() => history("/spots/create")}>
             Create a New Spot
           </button>
         </li>
