@@ -303,7 +303,7 @@ const UpdateSpotForm = () => {
         <div className="form-section">
           <h3>Add photos of your spot</h3>
           <p>
-            Showcase your spot  best features with high-quality photos. Guests
+            Showcase your spot best features with high-quality photos. Guests
             will be able to see them when they book.
           </p>
           <label>Preview Image (required)</label>

@@ -18,6 +18,7 @@ function Navigation({ isLoaded }) {
 
   let sessionLinks;
   if (sessionUser) {
+    // Links for authenticated users
     sessionLinks = (
       <>
         <li>
@@ -26,8 +27,7 @@ function Navigation({ isLoaded }) {
           </button>
         </li>
         <li>
-          <NavLink to="/spots/manage">Manage Spots</NavLink>{" "}
-          {/* Added "Manage Spots" link */}
+          <NavLink to="/spots/manage">Manage Spots</NavLink>
         </li>
         <li>
           <ProfileButton user={sessionUser} />
@@ -37,7 +37,7 @@ function Navigation({ isLoaded }) {
   } else {
     // Links for unauthenticated users
     sessionLinks = (
-      <>
+      <ul> {/* Correctly wrapped <li> elements in a <ul>  */}
         <li>
           <OpenModalMenuItem
             itemText="Log In"
@@ -52,7 +52,7 @@ function Navigation({ isLoaded }) {
             onItemClick={() => setShowSignupModal(true)}
           />
         </li>
-      </>
+      </ul>
     );
   }
 
