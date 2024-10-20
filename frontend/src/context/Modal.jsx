@@ -1,5 +1,5 @@
-import { useRef, useState, useContext, createContext, useMemo, useCallback } from 'react';
-import ReactDOM from 'react-dom/client';
+import { useRef, useState, useContext, createContext, useMemo, useCallback, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import './Modal.css';
 
@@ -19,7 +19,21 @@ export function ModalProvider({ children }) {
       setOnModalClose(null);
       onModalClose();
     }
-  }, [onModalClose, setModalContent, setOnModalClose]);
+  }, [onModalClose]);
+
+  // Handle Escape key to close modal
+  const handleKeyDown = useCallback((event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  }, [closeModal]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   // Memoized contextValue
   const contextValue = useMemo(() => ({
@@ -29,7 +43,7 @@ export function ModalProvider({ children }) {
     onModalClose,
     setOnModalClose,
     closeModal
-  }), [modalRef, modalContent, onModalClose, setModalContent, setOnModalClose, closeModal]);
+  }), [modalRef, modalContent, onModalClose, closeModal]);
 
   return (
     <>
@@ -44,23 +58,34 @@ export function ModalProvider({ children }) {
 // Modal Component
 export function Modal() {
   const { modalRef, modalContent, closeModal } = useContext(ModalContext);
+  const contentRef = useRef();
 
-  if (!modalRef || !modalRef.current || !modalContent) return null;
+  useEffect(() => {
+    if (modalContent) {
+      contentRef.current.focus(); // Set focus to modal content when it opens
+    }
+  }, [modalContent]);
+
+  if (!modalRef.current || !modalContent) return null;
 
   return ReactDOM.createPortal(
-    <div id="modal">
-      <div id="modal-background" onClick={closeModal} />
-
-      <div id="modal-content">{modalContent}</div>
+    <div className="modal" onClick={closeModal}>
+      <div className="modal-content" ref={contentRef} onClick={(e) => e.stopPropagation()}>
+        {modalContent}
+      </div>
     </div>,
     modalRef.current
   );
 }
 
-// Custom Hook for accessing Modal Context
-export const useModal = () => useContext(ModalContext);
+// Remove the PropTypes for children since it's not needed
+Modal.propTypes = {}; // No props are required
 
-// Prop Type Validation for ModalProvider
-ModalProvider.propTypes = {
-  children: PropTypes.node.isRequired
-};
+// Hook to use the modal context
+export function useModal() {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error('useModal must be used within a ModalProvider');
+  }
+  return context;
+}

@@ -1,34 +1,47 @@
-/* Navigation.css */
-.navigation-container {
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px; /* Adjust padding as needed */
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0f0; /* Add a background color if needed */
+  border-bottom: 1px solid #ccc; /* Add a bottom border if needed */
 }
 
-.nav-left {
+.app-logo {
+  margin-right: 10px;
+}
+
+.logo {
+  width: 50px; /* Adjust the logo size as needed */
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.navigation-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.nav-right {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
 }
 
-.logo-link img {
-  width: 50px; /* Adjust logo size as needed */
-  height: auto;
-}
-
-.nav-right {
-  display: flex;
-  list-style: none;
-}
-
 .nav-right li {
-  margin-left: 20px; /* Space between nav items */
+  margin-left: 20px;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .navigation-container {
-      flex-direction: column; /* Stack items on smaller screens */
-      align-items: flex-start; /* Align items to the left */
-  }
+.nav-right a {
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-right a:hover {
+  color: #666;
 }
