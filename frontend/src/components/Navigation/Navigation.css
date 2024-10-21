@@ -25,6 +25,7 @@
 .app-logo {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -35,8 +36,9 @@
 
 .navigation-container {
   display: flex;
-  justify-content: flex-end;
+  justify-contents: flex-end;
   align-items: center;
+  flex-grow: 1;
 }
 
 .nav-right {
@@ -45,12 +47,29 @@
   padding: 0;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .nav-right li {
   margin-left: 20px;
 }
 
+.profile-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.profile-dropdown.hidden {
+  display: none;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .header-container {
     padding: 0 10px;
