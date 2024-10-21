@@ -39,6 +39,7 @@ const router = createBrowserRouter([
         path: "/spots/new",
         element: <CreateSpotForm />,
       },
+      
     ],
   },
 ]);

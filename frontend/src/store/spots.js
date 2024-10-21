@@ -25,7 +25,7 @@ const randomLocations = [
   { city: "San Antonio", state: "TX", price: 95 },
   { city: "San Diego", state: "CA", price: 180 },
   { city: "Dallas", state: "TX", price: 130 },
-  { city: "San Jose", state: "CA", price: 170 }
+  { city: "San Jose", state: "CA", price: 170 },
 ];
 
 const imageUrls = [
@@ -35,10 +35,10 @@ const imageUrls = [
   "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG91c2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-1576941089067-2de3c901e126?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-1598228723793-52759bba239c?ixlib=rb-4.0.3& ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  " https://images.unsplash.com/photo-1598228723793-52759bba239c?ixlib=rb-4.0.3& ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+  "https://images.unsplash.com/photo-3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
 ];
 
 // Action Creators
@@ -49,7 +49,7 @@ export const setSpotDetails = (spot) => ({
 
 export const setRandomSpots = (spots) => ({
   type: SET_RANDOM_SPOTS,
-  payload: spots
+  payload: spots,
 });
 
 export const generateRandomSpots = () => (dispatch) => {
@@ -60,7 +60,7 @@ export const generateRandomSpots = () => (dispatch) => {
     city: location.city,
     state: location.state,
     avgRating: Math.random() * 5,
-    price: location.price
+    price: location.price,
   }));
 
   dispatch(setRandomSpots(randomSpots));
@@ -97,17 +97,17 @@ export const setError = (error) => ({
 });
 
 export const updateSpotStart = () => ({
-  type: UPDATE_SPOT_START
+  type: UPDATE_SPOT_START,
 });
 
 export const updateSpotSuccess = (spot) => ({
   type: UPDATE_SPOT_SUCCESS,
-  payload: spot
+  payload: spot,
 });
 
 export const updateSpotFailure = (error) => ({
   type: UPDATE_SPOT_FAILURE,
-  payload: error
+  payload: error,
 });
 
 // Thunks
@@ -149,6 +149,7 @@ export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
     throw error;
   }
 };
+
 export const createSpot = (spotData, imageUrls) => async (dispatch) => {
   try {
     const response = await csrfFetch("/api/spots", {
@@ -193,27 +194,28 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
       dispatch(setSpotDetails(spotData));
     } else {
       const error = await response.json();
-      dispatch(setError(error.message || 'Failed to fetch spot details'));
+      dispatch(setError(error.message || "Failed to fetch spot details"));
     }
   } catch (error) {
-    console.error('Error fetching spot details:', error);
+    console.error("Error fetching spot details:", error);
     dispatch(setError(error.toString()));
   } finally {
     dispatch(setLoading(false));
   }
 };
+
 export const fetchSpots = () => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const response = await csrfFetch("/api/spots");
     if (!response.ok) {
-      throw new Error('Failed to fetch spots');
+      throw new Error("Failed to fetch spots");
     }
     const data = await response.json();
-    console.log('Fetched spots:', data);
+    console.log("Fetched spots:", data);
     dispatch(setSpots(data));
   } catch (error) {
-    console.error('Error fetching spots:', error);
+    console.error("Error fetching spots:", error);
     dispatch(setError(error.toString()));
   } finally {
     dispatch(setLoading(false));
@@ -251,6 +253,7 @@ const spotReducer = (state = initialState, action) => {
       return {
         ...state,
         allSpots: { ...state.allSpots, [action.payload.id]: action.payload },
+        singleSpot: action.payload,
       };
 
     case SET_SPOT_DETAILS:

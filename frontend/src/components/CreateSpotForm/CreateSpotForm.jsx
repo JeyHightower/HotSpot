@@ -1,6 +1,6 @@
 // src/components/CreateSpotForm/CreateSpotForm.jsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createSpot } from "../../store/spots";
@@ -22,6 +22,24 @@ const CreateSpotForm = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
 
+  useEffect(() => {
+    // Reset form when navigating away and back
+    return () => {
+      setFormData({
+        country: "",
+        address: "",
+        city: "",
+        state: "",
+        description: "",
+        name: "",
+        price: "",
+      });
+      setImageUrls(["", "", "", "", ""]);
+      setErrors({});
+      setSuccessMessage("");
+    };
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -40,22 +58,13 @@ const CreateSpotForm = () => {
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
     if (formData.description.length < 30)
-      newErrors.description = "Description needs a minimum of 30 characters";
+      newErrors.description = "Description needs 30 or more characters";
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.price || formData.price <= 0)
-      newErrors.price = "Price must be greater than 0";
+      newErrors.price = "Price per night is required";
 
     if (!imageUrls[0].trim())
-      newErrors.images = "At least one image URL is required";
-
-    // Validate image URLs
-    const validImageUrls = imageUrls.filter((url) => url.trim() !== "");
-    validImageUrls.forEach((url, index) => {
-      if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/.test(url)) {
-        newErrors[`imageUrl${index}`] =
-          "Invalid image URL. Must end with .jpg, .jpeg, .png, or .gif";
-      }
-    });
+      newErrors.previewImage = "Preview Image URL is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,9 +84,7 @@ const CreateSpotForm = () => {
           )
         );
         setSuccessMessage("Spot created successfully!");
-        setTimeout(() => {
-          navigate(`/spots/${newSpot.id}`);
-        }, 2000);
+        navigate(`/spots/${newSpot.id}`);
       } catch (err) {
         if (err.errors) {
           setErrors(err.errors);
@@ -91,6 +98,13 @@ const CreateSpotForm = () => {
   return (
     <div className="create-spot-form">
       <h1>Create a New Spot</h1>
+      {Object.values(errors).length > 0 && (
+        <div className="error-summary">
+          {Object.values(errors).map((error, index) => (
+            <p key={index}>{error}</p>
+          ))}
+        </div>
+      )}
       {successMessage && (
         <div className="success-message">{successMessage}</div>
       )}
@@ -108,10 +122,10 @@ const CreateSpotForm = () => {
               name="country"
               value={formData.country}
               onChange={handleChange}
-              required
+              placeholder="Country"
             />
+            {errors.country && <p>{errors.country}</p>}
           </label>
-          {errors.country && <div className="error">{errors.country}</div>}
           <label>
             Address
             <input
@@ -119,10 +133,10 @@ const CreateSpotForm = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              required
+              placeholder="Address"
             />
+            {errors.address && <p>{errors.address}</p>}
           </label>
-          {errors.address && <div className="error">{errors.address}</div>}
           <label>
             City
             <input
@@ -130,10 +144,10 @@ const CreateSpotForm = () => {
               name="city"
               value={formData.city}
               onChange={handleChange}
-              required
+              placeholder="City"
             />
+            {errors.city && <p>{errors.city}</p>}
           </label>
-          {errors.city && <div className="error">{errors.city}</div>}
           <label>
             State
             <input
@@ -141,25 +155,33 @@ const CreateSpotForm = () => {
               name="state"
               value={formData.state}
               onChange={handleChange}
-              required
+              placeholder="State"
             />
+            {errors.state && <p>{errors.state}</p>}
           </label>
-          {errors.state && <div className="error">{errors.state}</div>}
         </section>
         <section>
-          <h2>Tell us about your place</h2>
+          <h2>Tell guests about your place</h2>
+          <p>
+            Write a description that highlights what makes your place special.
+          </p>
           <label>
             Description
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              required
+              placeholder="Description"
             />
+            {errors.description && <p>{errors.description}</p>}
           </label>
-          {errors.description && (
-            <div className="error">{errors.description}</div>
-          )}
+        </section>
+        <section>
+          <h2>Create a title for your spot</h2>
+          <p>
+            Catch guests' attention with a spot title that highlights what makes
+            your place special.
+          </p>
           <label>
             Name
             <input
@@ -167,43 +189,46 @@ const CreateSpotForm = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              required
+              placeholder="Name of your spot"
             />
+            {errors.name && <p>{errors.name}</p>}
           </label>
-          {errors.name && <div className="error">{errors.name}</div>}
+        </section>
+        <section>
+          <h2>Set a base price for your spot</h2>
+          <p>
+            Competitive pricing can help your listing stand out and rank higher
+            in search results.
+          </p>
           <label>
-            Price (per night)
+            Price per night (USD)
             <input
               type="number"
               name="price"
               value={formData.price}
               onChange={handleChange}
-              required
+              placeholder="Price per night (USD)"
             />
+            {errors.price && <p>{errors.price}</p>}
           </label>
-          {errors.price && <div className="error">{errors.price}</div>}
         </section>
         <section>
-          <h2>Add some photos</h2>
-          {imageUrls.map((url, index) => (
+          <h2>Liven up your spot with photos</h2>
+          <p>Submit a link to at least one photo to publish your spot.</p>
+          {imageUrls.map((imageUrl, index) => (
             <label key={index}>
-              Image URL {index + 1}
+              {index === 0 ? "Preview Image URL" : "Image URL"}
               <input
                 type="text"
-                value={url}
+                value={imageUrl}
                 onChange={(e) => handleImageChange(index, e.target.value)}
-                required={index === 0}
+                placeholder={index === 0 ? "Preview Image URL" : "Image URL"}
               />
+              {errors.previewImage && index === 0 && (
+                <p>{errors.previewImage}</p>
+              )}
             </label>
           ))}
-          {errors.images && <div className="error">{errors.images}</div>}
-          {Object.keys(errors)
-            .filter((key) => key.startsWith("imageUrl"))
-            .map((key, index) => (
-              <div key={index} className="error">
-                {errors[key]}
-              </div>
-            ))}
         </section>
         <button type="submit">Create Spot</button>
       </form>
