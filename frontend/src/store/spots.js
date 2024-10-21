@@ -32,9 +32,9 @@ const imageUrls = [
   "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG91c2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-1576941089067-2de3c901e126?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-1598228723793 -52759bba239c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1598228723793-52759bba239c?ixlib=rb-4.0.3& ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-2?ixlib=rb-4.0.3&ixid=M3wxMjA3f DB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
   "https://images.unsplash.com/photo-3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
 ];
 
@@ -166,13 +166,21 @@ export const createSpot = (spotData, imageUrls) => async (dispatch) => {
 };
 
 export const fetchSpotDetails = (spotId) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotId}`);
-  if (response.ok) {
-    const spotData = await response.json();
-    dispatch(setSpotDetails(spotData));
-  } else {
-    const error = await response.json();
-    return error;
+  dispatch(setLoading(true));
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`);
+    if (response.ok) {
+      const spotData = await response.json();
+      dispatch(setSpotDetails(spotData));
+    } else {
+      const error = await response.json();
+      dispatch(setError(error.message || 'Failed to fetch spot details'));
+    }
+  } catch (error) {
+    console.error('Error fetching spot details:', error);
+    dispatch(setError(error.toString()));
+  } finally {
+    dispatch(setLoading(false));
   }
 };
 
@@ -216,7 +224,7 @@ const initialState = {
   singleSpot: null,
   isLoading: false,
   error: null,
-  randomSpots: [], // Initialize randomSpots in the state
+  randomSpots: [],
 };
 
 const spotReducer = (state = initialState, action) => {
@@ -228,7 +236,7 @@ const spotReducer = (state = initialState, action) => {
       };
 
     case SET_SPOT_DETAILS:
-      return { ...state, singleSpot: action.payload };
+      return { ...state, singleSpot: action.payload, error: null };
 
     case SET_SPOTS:
       return { ...state, allSpots: action.payload };
@@ -257,7 +265,7 @@ const spotReducer = (state = initialState, action) => {
       return { ...state, error: action.payload };
 
     case SET_RANDOM_SPOTS:
-      return { ...state, randomSpots: action.payload }; // Handle SET_RANDOM_SPOTS action
+      return { ...state, randomSpots: action.payload };
 
     default:
       return state;
