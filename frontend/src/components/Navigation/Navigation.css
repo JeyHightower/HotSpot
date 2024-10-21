@@ -1,86 +1,72 @@
-.app-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 10px;
-  background-color: #f0f0f0; 
-  border-bottom: 1px solid #ccc; 
-  z-index: 1000;
-}
-
-.header-container {
+.navigation {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  width: 100%; 
-  padding: 0 20px;
-  box-sizing: border-box;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
 }
 
-.app-logo {
+.nav-left {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
-}
-
-.logo {
-  width: 50px; 
-  height: 50px;
-  object-fit: cover;
-}
-
-.navigation-container {
-  display: flex;
-  justify-contents: flex-end;
-  align-items: center;
-  flex-grow: 1;
 }
 
 .nav-right {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
 }
 
-.nav-right li {
-  margin-left: 20px;
+.menu-container {
+  position: relative;
+}
+
+.menu-button,
+.login-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 10px;
 }
 
 .profile-dropdown {
   position: absolute;
-  top: 50px;
   right: 0;
-  background-color: #f0f0f0;
+  top: 100%;
+  background-color: white;
   border: 1px solid #ccc;
+  border-radius: 4px;
   padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  list-style-type: none;
+  min-width: 150px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1;
 }
 
-.profile-dropdown.hidden {
+.profile-dropdown li {
+  margin-bottom: 10px;
+}
+
+.profile-dropdown li:last-child {
+  margin-bottom: 0;
+}
+
+.profile-dropdown button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 5px 0;
+  cursor: pointer;
+  color: #333;
+}
+
+.profile-dropdown button:hover {
+  background-color: #f1f3f5;
+}
+
+.hidden {
   display: none;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .header-container {
-    padding: 0 10px;
-  }
-  
-  .logo {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .nav-right li {
-    margin-left: 10px;
-  }
 }

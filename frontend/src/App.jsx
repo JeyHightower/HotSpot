@@ -15,7 +15,8 @@ function Layout() {
   }, [dispatch]);
 
   return (
-    <> <Navigation isLoaded={isLoaded} />
+    <>
+      <Navigation isLoaded={isLoaded} />
       <Outlet />
     </>
   );
@@ -23,18 +24,19 @@ function Layout() {
 
 const router = createBrowserRouter([
   {
-    path: '/',
     element: <Layout />,
     children: [
-      // Add routes here
+      {
+        path: "/",
+        element: <h1>Welcome to the Home Page</h1>,
+      },
+      // Add more routes here as needed
     ],
   },
 ]);
 
 function App() {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
