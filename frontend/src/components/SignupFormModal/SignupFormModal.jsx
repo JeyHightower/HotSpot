@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import * as sessionActions from '../../store/session';
@@ -12,104 +12,106 @@ function SignupFormModal() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({ });
+
   const { closeModal } = useModal();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password
-        })
-      )
-        .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) {
-            setErrors(data.errors);
-          }
-        });
+    const errors = {};
+    if (password !== confirmPassword) {
+      errors.password = "Passwords do not match";
     }
-    return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
-    });
+    if (password.length < 8) {
+      errors.password = "Password must be at least 8 characters";
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      errors.email = "Invalid email address";
+    }
+    setErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+      const user = await dispatch(sessionActions.signup({
+        email,
+        username,
+        firstName,
+        lastName,
+        password,
+      }));
+      if (user) {
+        closeModal();
+      }
+    }
   };
 
   return (
-    <>
-      <h1>Sign Up</h1>
+    <div className="signup-form-container">
+      <h1>Sign up</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email
+        <div className="form-group">
+          <label>Email</label>
           <input
-            type="text"
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
+          {errors.email && <div className="error">{errors.email}</div>}
+        </div>
+        <div className="form-group">
+          <label>Username</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </label>
-        {errors.username && <p>{errors.username}</p>}
-        <label>
-          First Name
+          {errors.username && <div className="error">{errors.username}</div>}
+        </div>
+        <div className="form-group">
+          <label>First Name</label>
           <input
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
-        </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
-          Last Name
+          {errors.firstName && <div className="error">{errors.firstName}</div>}
+        </div>
+        <div className="form-group">
+          <label>Last Name</label>
           <input
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
           />
-        </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
-          Password
+          {errors.lastName && <div className="error">{errors.lastName}</div>}
+        </div>
+        <div className="form-group">
+          <label>Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </label>
-        {errors.password && <p>{errors.password}</p>}
-        <label>
-          Confirm Password
+          {errors.password && <div className="error">{errors.password}</div>}
+        </div>
+        <div className="form-group">
+          <label>Confirm Password</label>
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-        </label>
-        {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
-        )}
-        <button type="submit">Sign Up</button>
+          {errors.confirmPassword && <div className="error">{errors.confirmPassword}</div>}
+        </div>
+        <button type="submit" className="signup-button">Sign up</button>
+        {Object.keys(errors).length === 0 && <div className="success-message">Account created successfully!</div>}
       </form>
-    </>
+    </div>
   );
 }
 

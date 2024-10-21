@@ -10,13 +10,14 @@ import logo from '/logo.jpg';
 
 const Navigation = () => {
   const sessionUser = useSelector(state => state.session.user);
-  console.log('Navigation: sessionUser', sessionUser);
   const { setModalContent } = useModal();
 
+  // Handler for opening the login modal
   const handleLogin = () => {
     setModalContent(<LoginFormModal />);
   };
 
+  // Handler for opening the signup modal
   const handleSignUp = () => {
     setModalContent(<SignupFormModal />);
   };
@@ -30,8 +31,10 @@ const Navigation = () => {
       </div>
       <div className="nav-right">
         {sessionUser ? (
+          // If user is logged in, show the ProfileButton
           <ProfileButton user={sessionUser} />
         ) : (
+          // If user is logged out, show Login and Sign Up buttons
           <>
             <button className="login-button" onClick={handleLogin}>Log In</button>
             <button className="signup-button" onClick={handleSignUp}>Sign Up</button>

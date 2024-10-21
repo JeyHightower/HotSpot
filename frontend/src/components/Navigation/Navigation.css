@@ -34,10 +34,7 @@
   color: #333;
 }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-}
+
 
 .login-button, .menu-button {
   padding: 0.5rem 1rem;
@@ -82,4 +79,51 @@
 
 .profile-dropdown button:hover {
   background-color: #f8f9fa;
+}
+
+
+.nav-left .nav-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-left .logo-image {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.login-button,
+.signup-button {
+  padding: 8px 16px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.login-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.signup-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.login-button:hover {
+  background-color: #e0e0e0;
+}
+
+.signup-button:hover {
+  background-color: #45a049;
 }
