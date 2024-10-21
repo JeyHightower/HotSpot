@@ -2,21 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
+import Home from './components/Home';
+import SpotDetail from './components/SpotDetail';
 import * as sessionActions from './store/session';
-import { restoreUser } from './store/session';
 
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(sessionActions.restoreUser());
+    dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      <Outlet />
+      {isLoaded && <Outlet />}
     </>
   );
 }
@@ -27,7 +28,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <h1>Welcome to the Home Page</h1>,
+        element: <Home />,
+      },
+      {
+        path: "/spots/:spotId",
+        element: <SpotDetail />,
       },
       // Add more routes here as needed
     ],
@@ -35,9 +40,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const dispatch = useDispatch();
-
- 
   return <RouterProvider router={router} />;
 }
 

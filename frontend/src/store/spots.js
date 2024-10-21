@@ -1,18 +1,13 @@
 import { csrfFetch } from "./csrf";
 import { CREATE_SPOT, SET_SPOT_ERRORS } from "./spotConstants";
 
-/* 
-  Action Types:
-  - SET_SPOT_DETAILS: Used to set the details of a specific spot.
-  - SET_SPOTS: Used to set an array of all spots.
-  - CREATE_SPOT: Used to add a newly created spot to the Redux store.
-  - SET_SPOT_ERRORS: Used to set validation errors for spot creation. 
-  - DELETE_SPOT: Used to remove a spot from the Redux store.
-*/
+// Action Types
 const SET_SPOT_DETAILS = "spots/SET_SPOT_DETAILS";
 const SET_SPOTS = "spots/SET_SPOTS";
 const DELETE_SPOT = "spots/DELETE_SPOT";
 const UPDATE_SPOT = "spots/UPDATE_SPOT";
+const SET_LOADING = "spots/SET_LOADING";
+const SET_ERROR = "spots/SET_ERROR";
 
 // Action Creators
 export const setSpotDetails = (spot) => ({
@@ -30,31 +25,36 @@ export const setSpotErrors = (errors) => ({
   payload: errors,
 });
 
-// Action creator for deleting a spot
 export const removeSpot = (spotId) => ({
   type: DELETE_SPOT,
   payload: spotId,
 });
 
-//Action Creator for updating a spot
 export const setUpdatedSpot = (spot) => ({
   type: UPDATE_SPOT,
   payload: spot,
 });
 
-//thunk to update existing spot
+export const setLoading = (isLoading) => ({
+  type: SET_LOADING,
+  payload: isLoading,
+});
+
+export const setError = (error) => ({
+  type: SET_ERROR,
+  payload: error,
+});
+
+// Thunks
 export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
   try {
-    //send a put request to the backend api to update the spot
     const response = await csrfFetch(`/api/spots/${spotId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(spotData),
     });
     if (response.ok) {
-      //if update was successful
       const updatedSpot = await response.json();
-
       dispatch(setUpdatedSpot(updatedSpot));
 
       if (imageUrls && imageUrls.length > 0) {
@@ -82,7 +82,6 @@ export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
   }
 };
 
-// Thunk to create a new spot
 export const createSpot = (spotData, imageUrls) => async (dispatch) => {
   try {
     const response = await csrfFetch("/api/spots", {
@@ -92,10 +91,8 @@ export const createSpot = (spotData, imageUrls) => async (dispatch) => {
     });
     if (response.ok) {
       const createdSpot = await response.json();
-
       dispatch({ type: CREATE_SPOT, payload: createdSpot });
 
-      // If you need to upload images separately to your backend:
       for (let i = 0; i < imageUrls.length; i++) {
         if (imageUrls[i]) {
           await csrfFetch(`/api/spots/${createdSpot.id}/images`, {
@@ -120,10 +117,8 @@ export const createSpot = (spotData, imageUrls) => async (dispatch) => {
   }
 };
 
-// Thunk to fetch spot details
 export const fetchSpotDetails = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
-
   if (response.ok) {
     const spotData = await response.json();
     dispatch(setSpotDetails(spotData));
@@ -134,21 +129,28 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
 };
 
 export const fetchSpots = () => async (dispatch) => {
-  const response = await csrfFetch("/api/spots");
-
-  if (response.ok) {
+  dispatch(setLoading(true));
+  try {
+    const response = await csrfFetch("/api/spots");
+    if (!response.ok) {
+      throw new Error('Failed to fetch spots');
+    }
     const data = await response.json();
-    dispatch(setSpots(data.Spots));
+    console.log('Fetched spots:', data);
+    dispatch(setSpots(data));
+  } catch (error) {
+    console.error('Error fetching spots:', error);
+    dispatch(setError(error.toString()));
+  } finally {
+    dispatch(setLoading(false));
   }
 };
 
-// Thunk to delete a spot
 export const deleteSpot = (spotId) => async (dispatch) => {
   try {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
       method: "DELETE",
     });
-
     if (response.ok) {
       dispatch(removeSpot(spotId));
     } else {
@@ -164,7 +166,8 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 const initialState = {
   allSpots: {},
   singleSpot: null,
-  errors: null,
+  isLoading: false,
+  error: null,
 };
 
 const spotReducer = (state = initialState, action) => {
@@ -180,6 +183,7 @@ const spotReducer = (state = initialState, action) => {
 
     case SET_SPOTS:
       return { ...state, allSpots: action.payload };
+
     case UPDATE_SPOT: {
       return {
         ...state,
@@ -187,14 +191,21 @@ const spotReducer = (state = initialState, action) => {
         singleSpot: action.payload,
       };
     }
+
     case SET_SPOT_ERRORS:
-      return { ...state, errors: action.payload };
+      return { ...state, error: action.payload };
 
     case DELETE_SPOT: {
       const newState = { ...state };
       delete newState.allSpots[action.payload];
       return newState;
     }
+
+    case SET_LOADING:
+      return { ...state, isLoading: action.payload };
+
+    case SET_ERROR:
+      return { ...state, error: action.payload };
 
     default:
       return state;

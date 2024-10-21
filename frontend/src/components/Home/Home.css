@@ -1,0 +1,52 @@
+.home-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.location-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.location-card:hover {
+  transform: translateY(-5px);
+}
+
+.location-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.location-info {
+  padding: 15px;
+}
+
+.location-info h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+}
+
+.location-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.location-card a {
+  display: block;
+  text-align: center;
+  background-color: #0077cc;
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.location-card a:hover {
+  background-color: #005fa3;
+}
