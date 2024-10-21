@@ -1,74 +1,73 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import './Navigation.css';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import './navigation.css';
+import logo from '/logo.jpg';
 
-function Navigation({ isLoaded }) {
-  const sessionUser = useSelector(state => state.session.user);
-  const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
+const Navigation = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [username, setUsername] = useState('');
 
-  const toggleMenu = (e) => {
-    e.stopPropagation();
-    setShowMenu(!showMenu);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
-  useEffect(() => {
-    if (!showMenu) return;
+  const handleLogin = () => {
+    // Implement login logic here
+    setIsLoggedIn(true);
+    setUsername('JohnDoe'); // Set this to the actual username after login
+  };
 
-    const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername('');
+    setIsMenuOpen(false);
+  };
 
-    document.addEventListener('click', closeMenu);
-
-    return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
-
-  const closeMenu = () => setShowMenu(false);
-
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+  const handleSignUp = () => {
+    // Implement sign up logic here
+    console.log("Sign Up clicked");
+    // You might want to redirect to a sign-up page or open a sign-up modal
+  };
 
   return (
     <nav className="navigation">
       <div className="nav-left">
-        <NavLink to="/">Home</NavLink>
+        <Link to="/" className="nav-logo">
+        <img src={logo} alt="Company Logo" className="logo-image" /></Link>
       </div>
       <div className="nav-right">
-        {isLoaded && (
+        {!isLoggedIn && (
           <>
-            {sessionUser ? (
-              <div className="menu-container">
-                <button onClick={toggleMenu} className="menu-button">Menu</button>
-                <ul className={ulClassName} ref={ulRef}>
-                  <li>{sessionUser.username}</li>
-                  <li>{sessionUser.email}</li>
-                  <li>
-                    <button onClick={closeMenu}>Log Out</button>
-                  </li>
+            <button className="login-button" onClick={handleLogin}>Log In</button>
+            <div className="menu-container">
+              <button className="menu-button" onClick={toggleMenu}>
+                Menu
+              </button>
+              {isMenuOpen && (
+                <ul className="profile-dropdown">
+                  <li><button onClick={handleSignUp}>Sign Up</button></li>
                 </ul>
-              </div>
-            ) : (
-              <>
-                <button onClick={() => alert('Log In clicked')} className="login-button">Log In</button>
-                <div className="menu-container">
-                  <button onClick={toggleMenu} className="menu-button">Menu</button>
-                  <ul className={ulClassName} ref={ulRef}>
-                    <li>
-                      <button onClick={() => alert('Sign Up clicked')}>Sign Up</button>
-                    </li>
-                    {/* Add any additional menu items here */}
-                  </ul>
-                </div>
-              </>
-            )}
+              )}
+            </div>
           </>
+        )}
+        {isLoggedIn && (
+          <div className="menu-container">
+            <button className="menu-button" onClick={toggleMenu}>
+              Menu
+            </button>
+            {isMenuOpen && (
+              <ul className="profile-dropdown">
+                <li>Logged in as {username}</li>
+                <li><button onClick={handleLogout}>Log Out</button></li>
+              </ul>
+            )}
+          </div>
         )}
       </div>
     </nav>
   );
-}
+};
 
 export default Navigation;
