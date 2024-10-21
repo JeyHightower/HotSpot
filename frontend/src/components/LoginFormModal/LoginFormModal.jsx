@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
@@ -51,6 +51,15 @@ function LoginFormModal() {
     resetForm();
     closeModal();
   };
+
+  //cleanup func
+  useEffect(() => {
+    return () => {
+      setCredential('');
+      setPassword('');
+      setErrors({});
+    };
+  }, []);
   
   const isLoginDisabled = credential.trim().length < 4 || password.trim().length < 6 || isLoading;
 
