@@ -1,19 +1,67 @@
 import { csrfFetch } from "./csrf";
-import { CREATE_SPOT, SET_SPOT_ERRORS } from "./spotConstants";
+import {
+  CREATE_SPOT,
+  SET_SPOT_ERRORS,
+  SET_SPOT_DETAILS,
+  SET_SPOTS,
+  DELETE_SPOT,
+  UPDATE_SPOT,
+  SET_LOADING,
+  SET_ERROR,
+  SET_RANDOM_SPOTS
+} from "./spotConstants";
 
-// Action Types
-const SET_SPOT_DETAILS = "spots/SET_SPOT_DETAILS";
-const SET_SPOTS = "spots/SET_SPOTS";
-const DELETE_SPOT = "spots/DELETE_SPOT";
-const UPDATE_SPOT = "spots/UPDATE_SPOT";
-const SET_LOADING = "spots/SET_LOADING";
-const SET_ERROR = "spots/SET_ERROR";
+// Sample random locations and image URLs
+const randomLocations = [
+  { city: "New York", state: "NY", price: 150 },
+  { city: "Los Angeles", state: "CA", price: 200 },
+  { city: "Chicago", state: "IL", price: 120 },
+  { city: "Houston", state: "TX", price: 100 },
+  { city: "Phoenix", state: "AZ", price: 90 },
+  { city: "Philadelphia", state: "PA", price: 110 },
+  { city: "San Antonio", state: "TX", price: 95 },
+  { city: "San Diego", state: "CA", price: 180 },
+  { city: "Dallas", state: "TX", price: 130 },
+  { city: "San Jose", state: "CA", price: 170 }
+];
+
+const imageUrls = [
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwaG91c2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+  "https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG91c2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+  "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG91c2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+  "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG91c2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1576941089067-2de3c901e126?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1598228723793 -52759bba239c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-2?ixlib=rb-4.0.3&ixid=M3wxMjA3f DB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvdXNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+];
 
 // Action Creators
 export const setSpotDetails = (spot) => ({
   type: SET_SPOT_DETAILS,
   payload: spot,
 });
+
+export const setRandomSpots = (spots) => ({
+  type: SET_RANDOM_SPOTS,
+  payload: spots
+});
+
+export const generateRandomSpots = () => (dispatch) => {
+  const randomSpots = randomLocations.map((location, index) => ({
+    id: index + 1,
+    name: `Spot in ${location.city}, ${location.state}`,
+    previewImage: imageUrls[Math.floor(Math.random() * imageUrls.length)],
+    city: location.city,
+    state: location.state,
+    avgRating: Math.random() * 5,
+    price: location.price
+  }));
+
+  dispatch(setRandomSpots(randomSpots));
+};
 
 export const setSpots = (spots) => ({
   type: SET_SPOTS,
@@ -112,7 +160,7 @@ export const createSpot = (spotData, imageUrls) => async (dispatch) => {
       throw errorData;
     }
   } catch (error) {
-    console.error("Error creating spot:", error);
+    console.error("Error creating spot :", error);
     throw error;
   }
 };
@@ -168,6 +216,7 @@ const initialState = {
   singleSpot: null,
   isLoading: false,
   error: null,
+  randomSpots: [], // Initialize randomSpots in the state
 };
 
 const spotReducer = (state = initialState, action) => {
@@ -206,6 +255,9 @@ const spotReducer = (state = initialState, action) => {
 
     case SET_ERROR:
       return { ...state, error: action.payload };
+
+    case SET_RANDOM_SPOTS:
+      return { ...state, randomSpots: action.payload }; // Handle SET_RANDOM_SPOTS action
 
     default:
       return state;

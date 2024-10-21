@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSpots } from "../../store/spots";
+import { generateRandomSpots } from "../../store/spots";
 import { Link } from 'react-router-dom';
 import './Home.css';
 
@@ -32,10 +32,10 @@ const imageUrls = [
 
 function Home() {
   const dispatch = useDispatch();
-  const spots = useSelector((state) => state.spots.allSpots);
+  const spots = useSelector((state) => state.spots.randomSpots);
 
   useEffect(() => {
-    dispatch(fetchSpots());
+    dispatch(generateRandomSpots());
   }, [dispatch]);
 
   const getAverageRating = (spot) => {
@@ -45,16 +45,16 @@ function Home() {
 
   return (
     <div className="home-container">
-      {randomLocations.map((location, index) => (
-        <Link to={`/spots/${location.city.toLowerCase()}`} key={index} className="spot-link">
-          <div className="spot-tile" title={location.city}>
-            <img src={imageUrls[index]} alt={location.city} className="spot-image" />
+      {spots.map((spot) => (
+        <Link to={`/spots/${spot.id}`} key={spot.id} className="spot-link">
+          <div className="spot-tile" title={spot.name}>
+            <img src={spot.previewImage} alt={spot.name} className="spot-image" />
             <div className="spot-info">
-              <div className="spot-location">{location.city}, {location.state}</div>
+              <div className="spot-location">{spot.city}, {spot.state}</div>
               <div className="spot-rating">
-                <span className="star">★</span> {getAverageRating({ avgRating: Math.random() * 5 })}
+                <span className="star">★</span> {getAverageRating(spot)}
               </div>
-              <div className="spot-price">${location.price} <span className="night">night</span></div>
+              <div className="spot-price">${spot.price} <span className="night">night</span></div>
             </div>
           </div>
         </Link>
