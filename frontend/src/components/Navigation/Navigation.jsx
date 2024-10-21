@@ -1,27 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import LoginFormModal from '../LoginFormModal';
+import { useModal } from '../../context/Modal';
 import './navigation.css';
 import logo from '/logo.jpg';
 
 const Navigation = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const sessionUser = useSelector(state => state.session.user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [username, setUsername] = useState('');
+  const { setModalContent } = useModal();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleLogin = () => {
-    // Implement login logic here
-    setIsLoggedIn(true);
-    setUsername('JohnDoe'); // Set this to the actual username after login
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUsername('');
-    setIsMenuOpen(false);
+    setModalContent(<LoginFormModal />);
   };
 
   const handleSignUp = () => {
@@ -34,10 +29,11 @@ const Navigation = () => {
     <nav className="navigation">
       <div className="nav-left">
         <Link to="/" className="nav-logo">
-        <img src={logo} alt="Company Logo" className="logo-image" /></Link>
+          <img src={logo} alt="Company Logo" className="logo-image" />
+        </Link>
       </div>
       <div className="nav-right">
-        {!isLoggedIn && (
+        {!sessionUser ? (
           <>
             <button className="login-button" onClick={handleLogin}>Log In</button>
             <div className="menu-container">
@@ -51,16 +47,15 @@ const Navigation = () => {
               )}
             </div>
           </>
-        )}
-        {isLoggedIn && (
+        ) : (
           <div className="menu-container">
             <button className="menu-button" onClick={toggleMenu}>
               Menu
             </button>
             {isMenuOpen && (
               <ul className="profile-dropdown">
-                <li>Logged in as {username}</li>
-                <li><button onClick={handleLogout}>Log Out</button></li>
+                <li>Hello, {sessionUser.username}</li>
+                {/* Other menu items for logged-in users can go here */}
               </ul>
             )}
           </div>

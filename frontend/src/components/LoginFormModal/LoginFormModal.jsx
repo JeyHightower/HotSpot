@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import * as sessionActions from '../../store/session';
-import { useDispatch } from 'react-redux';
-import { useModal } from '../../context/Modal';
-import './LoginFormModal.css';
+import React, { useState } from "react";
+import * as sessionActions from "../../store/session";
+import { useDispatch } from "react-redux";
+import { useModal } from "../../context/Modal";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -20,9 +19,13 @@ function LoginFormModal() {
         const data = await res.json();
         if (data && data.errors) {
           setErrors(data.errors);
+        } else {
+          setErrors({ credential: "The provided credentials were invalid" });
         }
       });
   };
+
+  const isLoginDisabled = credential.length < 4 || password.length < 6;
 
   return (
     <>
@@ -46,10 +49,10 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.credential && (
-          <p>{errors.credential}</p>
-        )}
-        <button type="submit">Log In</button>
+        {errors.credential && <p className="error">{errors.credential}</p>}
+        <button type="submit" disabled={isLoginDisabled}>
+          Log In
+        </button>
       </form>
     </>
   );
