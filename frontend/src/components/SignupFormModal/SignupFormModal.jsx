@@ -14,11 +14,28 @@ function SignupFormModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const { closeModal } = useModal();
+  const { closeModal, modalOpen } = useModal();
 
   useEffect(() => {
     validateForm();
   }, [email, username, firstName, lastName, password, confirmPassword]);
+
+  useEffect(() => {
+    if (modalOpen) {
+      resetForm();
+    }
+  }, [modalOpen]);
+
+  const resetForm = () => {
+    setErrors({});
+    setEmail("");
+    setUsername("");
+    setFirstName("");
+    setLastName("");
+    setPassword("");
+    setConfirmPassword("");
+    setIsFormValid(false);
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -68,8 +85,11 @@ function SignupFormModal() {
         const data = await res.json();
         if (data && data.errors) {
           setErrors(data.errors);
+          setIsFormValid(false);
         }
       }
+    } else {
+      validateForm();
     }
   };
 
@@ -87,7 +107,7 @@ function SignupFormModal() {
             required
             placeholder="Enter your first name"
           />
-          {errors.firstName && <p className="error">{errors.firstName}</p>}
+          {errors.firstName && <p className="error">{errors.firstName }</p>}
         </div>
         <div className="form-group">
           <label htmlFor="lastName">Last Name</label>
@@ -101,7 +121,7 @@ function SignupFormModal() {
           />
           {errors.lastName && <p className="error">{errors.lastName}</p>}
         </div>
-        <div className="form-group">
+        <div className ="form-group">
           <label htmlFor="email">Email</label>
           <input
             id="email"

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import ProfileButton from './ProfileButton';
+import UserMenu from '../UserMenu';  // Make sure to create this component
 import { useModal } from '../../context/Modal';
 import './Navigation.css';
 import logo from '/logo.jpg'; 
@@ -31,8 +32,7 @@ const Navigation = () => {
       </div>
       <div className="nav-right">
         {sessionUser ? (
-          // If user is logged in, show the ProfileButton
-          <ProfileButton user={sessionUser} />
+          <UserMenu user={sessionUser} />
         ) : (
           // If user is logged out, show Login and Sign Up buttons
           <>

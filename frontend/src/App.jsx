@@ -3,15 +3,14 @@ import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
+import { restoreUser } from './store/session';
 
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true);
-    });
+    dispatch(sessionActions.restoreUser());
   }, [dispatch]);
 
   return (
@@ -36,6 +35,9 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const dispatch = useDispatch();
+
+ 
   return <RouterProvider router={router} />;
 }
 
