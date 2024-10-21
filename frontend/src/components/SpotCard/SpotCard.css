@@ -28,3 +28,9 @@
 .spot-price {
   font-weight: bold;
 }
+
+.spot-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Adjust as needed for spacing between star and number */
+}

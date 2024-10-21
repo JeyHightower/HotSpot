@@ -2,17 +2,21 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpotDetails } from '../../store/spots';
+import { fetchSpotReviews } from '../../store/reviews';
+import { FaStar } from 'react-icons/fa';
 import './SpotDetail.css';
 
 const SpotDetail = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const spot = useSelector(state => state.spots.singleSpot);
+  const reviews = useSelector(state => state.reviews.spotReviews);
   const isLoading = useSelector(state => state.spots.isLoading);
   const error = useSelector(state => state.spots.error);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
+    dispatch(fetchSpotReviews(spotId));
   }, [dispatch, spotId]);
 
   if (isLoading) return <div>Loading...</div>;
@@ -22,6 +26,14 @@ const SpotDetail = () => {
   const handleReserve = () => {
     alert("Feature coming soon");
   };
+
+  const renderRatingInfo = () => (
+    <>
+      <FaStar /> 
+      {spot.avgRating ? spot.avgRating.toFixed(1) : 'New'}
+      {spot.numReviews > 0 ? ` · ${spot.numReviews} ${spot.numReviews === 1 ? 'review' : 'reviews'}` : ''}
+    </>
+  );
 
   return (
     <div className="spot-detail">
@@ -49,8 +61,25 @@ const SpotDetail = () => {
         
         <div className="callout-box">
           <p><span className="price">${spot.price}</span> night</p>
+          <p className="rating">
+            {renderRatingInfo()}
+          </p>
           <button onClick={handleReserve}>Reserve</button>
         </div>
+      </div>
+
+      <div className="reviews-section">
+        <h2>
+          {renderRatingInfo()}
+        </h2>
+        
+        {reviews && reviews.map(review => (
+          <div key={review.id} className="review">
+            <p>{review.User.firstName}</p>
+            <p>{new Date(review.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+            <p>{review.review}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
