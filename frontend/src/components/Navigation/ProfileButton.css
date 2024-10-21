@@ -86,3 +86,52 @@
   .auth-links a:hover {
     color: #0056b3;
   }
+  .profile-button-container {
+    position: relative;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.profile-dropdown.hidden {
+    display: none;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.greeting, .email {
+    font-size: 14px;
+}
+
+.logout-button, .login-link, .signup-link {
+    background: none;
+    border: none;
+    color: #0077cc;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.logout-button:hover, .login-link:hover, .signup-link:hover {
+    color: #0055cc;
+}

@@ -29,8 +29,9 @@ const Navigation = () => {
         </Link>
       </div>
       <div className="nav-right">
-        <ProfileButton user={sessionUser} />
-        {!sessionUser && (
+        {sessionUser ? (
+          <ProfileButton user={sessionUser} />
+        ) : (
           <>
             <button className="login-button" onClick={handleLogin}>Log In</button>
             <button className="signup-button" onClick={handleSignUp}>Sign Up</button>
