@@ -8,12 +8,14 @@ function LoginFormModal() {
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
+    setIsLoading(true);
+    return dispatch(sessionActions.login({ credential: credential.trim(), password: password.trim() }))
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
@@ -22,10 +24,11 @@ function LoginFormModal() {
         } else {
           setErrors({ credential: "The provided credentials were invalid" });
         }
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
-  const isLoginDisabled = credential.length < 4 || password.length < 6;
+  const isLoginDisabled = credential.trim().length < 4 || password.trim().length < 6 || isLoading;
 
   return (
     <>
@@ -40,6 +43,7 @@ function LoginFormModal() {
             required
           />
         </label>
+        {errors.credential && <p className="error">{errors.credential}</p>}
         <label>
           Password
           <input
@@ -49,9 +53,9 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.credential && <p className="error">{errors.credential}</p>}
+        {errors.password && <p className="error">{errors.password}</p>}
         <button type="submit" disabled={isLoginDisabled}>
-          Log In
+          {isLoading ? "Logging in..." : "Log In"}
         </button>
       </form>
     </>

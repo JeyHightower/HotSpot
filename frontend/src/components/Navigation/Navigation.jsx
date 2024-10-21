@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import LoginFormModal from '../LoginFormModal';
+import SignupFormModal from '../SignupFormModal';
 import { useModal } from '../../context/Modal';
 import './navigation.css';
 import logo from '/logo.jpg';
@@ -20,9 +21,7 @@ const Navigation = () => {
   };
 
   const handleSignUp = () => {
-    // Implement sign up logic here
-    console.log("Sign Up clicked");
-    // You might want to redirect to a sign-up page or open a sign-up modal
+    setModalContent(<SignupFormModal />);
   };
 
   return (
@@ -36,21 +35,12 @@ const Navigation = () => {
         {!sessionUser ? (
           <>
             <button className="login-button" onClick={handleLogin}>Log In</button>
-            <div className="menu-container">
-              <button className="menu-button" onClick={toggleMenu}>
-                Menu
-              </button>
-              {isMenuOpen && (
-                <ul className="profile-dropdown">
-                  <li><button onClick={handleSignUp}>Sign Up</button></li>
-                </ul>
-              )}
-            </div>
+            <button className="signup-button" onClick={handleSignUp}>Sign Up</button>
           </>
         ) : (
           <div className="menu-container">
             <button className="menu-button" onClick={toggleMenu}>
-              Menu
+              User Menu
             </button>
             {isMenuOpen && (
               <ul className="profile-dropdown">
