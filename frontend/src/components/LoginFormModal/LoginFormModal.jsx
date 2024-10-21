@@ -28,6 +28,30 @@ function LoginFormModal() {
       .finally(() => setIsLoading(false));
   };
 
+  const handleDemoLogin = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    return dispatch(sessionActions.login({ credential: 'demo@user.io', password: 'password1' }))
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) setErrors(data.errors);
+      })
+      .finally(() => setIsLoading(false));
+  };
+
+  const resetForm = () => {
+    setCredential('');
+    setPassword('');
+    setErrors({});
+    setIsLoading(false);
+  };
+
+  const handleCloseModal = () => {
+    resetForm();
+    closeModal();
+  };
+  
   const isLoginDisabled = credential.trim().length < 4 || password.trim().length < 6 || isLoading;
 
   return (
@@ -58,6 +82,9 @@ function LoginFormModal() {
           {isLoading ? "Logging in..." : "Log In"}
         </button>
       </form>
+      <button onClick={handleDemoLogin} disabled={isLoading}>
+        {isLoading ? "Logging in..." : "Log in as Demo User"}
+      </button>
     </>
   );
 }
