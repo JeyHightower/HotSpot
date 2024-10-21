@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
@@ -32,7 +32,10 @@ const Navigation = () => {
       </div>
       <div className="nav-right">
         {sessionUser ? (
-          <UserMenu user={sessionUser} />
+          <>
+            <NavLink to="/spots/new" className="create-spot-button">Create a New Spot</NavLink>
+            <UserMenu user={sessionUser} />
+          </>
         ) : (
           // If user is logged out, show Login and Sign Up buttons
           <>

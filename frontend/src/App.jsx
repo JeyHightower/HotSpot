@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import Navigation from './components/Navigation/Navigation';
-import Home from './components/Home';
-import SpotDetail from './components/SpotDetail';
-import * as sessionActions from './store/session';
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import Navigation from "./components/Navigation/Navigation";
+import Home from "./components/Home";
+import SpotDetail from "./components/SpotDetail";
+import CreateSpotForm from "./components/CreateSpotForm/CreateSpotForm"; // Import the new component
+import * as sessionActions from "./store/session";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -34,7 +35,10 @@ const router = createBrowserRouter([
         path: "/spots/:spotId",
         element: <SpotDetail />,
       },
-      // Add more routes here as needed
+      {
+        path: "/spots/new",
+        element: <CreateSpotForm />,
+      },
     ],
   },
 ]);

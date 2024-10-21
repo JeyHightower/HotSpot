@@ -127,3 +127,16 @@
 .signup-button:hover {
   background-color: #45a049;
 }
+
+.create-spot-button {
+  text-decoration: none;
+  padding: 10px 15px;
+  background-color: #ff5a5f;
+  color: white;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.create-spot-button:hover {
+  background-color: #ff7e82;
+}

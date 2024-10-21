@@ -8,7 +8,10 @@ import {
   UPDATE_SPOT,
   SET_LOADING,
   SET_ERROR,
-  SET_RANDOM_SPOTS
+  SET_RANDOM_SPOTS,
+  UPDATE_SPOT_START,
+  UPDATE_SPOT_SUCCESS,
+  UPDATE_SPOT_FAILURE,
 } from "./spotConstants";
 
 // Sample random locations and image URLs
@@ -93,8 +96,23 @@ export const setError = (error) => ({
   payload: error,
 });
 
+export const updateSpotStart = () => ({
+  type: UPDATE_SPOT_START
+});
+
+export const updateSpotSuccess = (spot) => ({
+  type: UPDATE_SPOT_SUCCESS,
+  payload: spot
+});
+
+export const updateSpotFailure = (error) => ({
+  type: UPDATE_SPOT_FAILURE,
+  payload: error
+});
+
 // Thunks
 export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
+  dispatch(updateSpotStart());
   try {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
       method: "PUT",
@@ -103,7 +121,7 @@ export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
     });
     if (response.ok) {
       const updatedSpot = await response.json();
-      dispatch(setUpdatedSpot(updatedSpot));
+      dispatch(updateSpotSuccess(updatedSpot));
 
       if (imageUrls && imageUrls.length > 0) {
         for (let i = 0; i < imageUrls.length; i++) {
@@ -122,14 +140,15 @@ export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
       if (errorData.errors) {
         dispatch(setSpotErrors(errorData.errors));
       }
+      dispatch(updateSpotFailure(errorData));
       throw errorData;
     }
   } catch (error) {
     console.error("Error updating spot:", error);
+    dispatch(updateSpotFailure(error.toString()));
     throw error;
   }
 };
-
 export const createSpot = (spotData, imageUrls) => async (dispatch) => {
   try {
     const response = await csrfFetch("/api/spots", {
@@ -183,7 +202,6 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
     dispatch(setLoading(false));
   }
 };
-
 export const fetchSpots = () => async (dispatch) => {
   dispatch(setLoading(true));
   try {
@@ -241,22 +259,24 @@ const spotReducer = (state = initialState, action) => {
     case SET_SPOTS:
       return { ...state, allSpots: action.payload };
 
-    case UPDATE_SPOT: {
+    case UPDATE_SPOT:
       return {
         ...state,
         allSpots: { ...state.allSpots, [action.payload.id]: action.payload },
         singleSpot: action.payload,
       };
-    }
+
+    case DELETE_SPOT:
+      const newAllSpots = { ...state.allSpots };
+      delete newAllSpots[action.payload];
+      return {
+        ...state,
+        allSpots: newAllSpots,
+        singleSpot: null,
+      };
 
     case SET_SPOT_ERRORS:
-      return { ...state, error: action.payload };
-
-    case DELETE_SPOT: {
-      const newState = { ...state };
-      delete newState.allSpots[action.payload];
-      return newState;
-    }
+      return { ...state, errors: action.payload };
 
     case SET_LOADING:
       return { ...state, isLoading: action.payload };
@@ -266,6 +286,20 @@ const spotReducer = (state = initialState, action) => {
 
     case SET_RANDOM_SPOTS:
       return { ...state, randomSpots: action.payload };
+
+    case UPDATE_SPOT_START:
+      return { ...state, isLoading: true, error: null };
+
+    case UPDATE_SPOT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        allSpots: { ...state.allSpots, [action.payload.id]: action.payload },
+        singleSpot: action.payload,
+      };
+
+    case UPDATE_SPOT_FAILURE:
+      return { ...state, isLoading: false, error: action.payload };
 
     default:
       return state;
