@@ -19,9 +19,8 @@ const SpotDetail = () => {
   const isLoading = useSelector((state) => state.spots.isLoading);
   const error = useSelector((state) => state.spots.error);
   const sessionUser = useSelector((state) => state.session.user);
-  const [showReviewForm, setShowReviewForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -70,25 +69,22 @@ const SpotDetail = () => {
     sessionUser.id !== spot.Owner.id &&
     !sortedReviews.some((review) => review.User.id === sessionUser.id);
 
-  const handleReviewCreated = () => {
-    setShowReviewForm(false);
-    dispatch(fetchSpotReviews(spotId));
-  };
-
   const handleReviewSubmit = async (reviewData) => {
     try {
-      setErrorMessage(''); // Clear any previous error messages
+      setErrorMessage(""); // Clear any previous error messages
       const newReview = await dispatch(createReview(spotId, reviewData));
       if (newReview) {
         // Refresh the spot details and reviews
-        dispatch(fetchSpotDetails(spotId));
-        dispatch(fetchSpotReviews(spotId));
+        await dispatch(fetchSpotDetails(spotId));
+        await dispatch(fetchSpotReviews(spotId));
       } else {
-        setErrorMessage('Failed to submit review. Please try again.');
+        setErrorMessage("Failed to submit review. Please try again.");
       }
     } catch (error) {
       console.error("Error submitting review:", error);
-      setErrorMessage('An error occurred while submitting your review. Please try again later.');
+      setErrorMessage(
+        "An error occurred while submitting your review. Please try again later."
+      );
     }
   };
 
@@ -97,11 +93,12 @@ const SpotDetail = () => {
 
   return (
     <div className="spot-detail">
+      {errorMessage && <p className="error">{errorMessage}</p>}
       {spot ? (
         <>
           <h1>{spot.name}</h1>
           <p>
-            {spot.city}, {spot .state}, {spot.country}
+            {spot.city}, {spot.state}, {spot.country}
           </p>
 
           <div className="image-gallery">
