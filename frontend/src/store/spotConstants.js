@@ -12,3 +12,4 @@ export const SET_RANDOM_SPOTS = 'spots/SET_RANDOM_SPOTS';
 export const UPDATE_SPOT_START = "spots/UPDATE_SPOT_START";
 export const UPDATE_SPOT_SUCCESS = "spots/UPDATE_SPOT_SUCCESS";
 export const UPDATE_SPOT_FAILURE = "spots/UPDATE_SPOT_FAILURE";
+export const LOAD_USER_SPOTS = "spots/LOAD_USER_SPOTS";

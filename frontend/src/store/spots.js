@@ -12,6 +12,7 @@ import {
   UPDATE_SPOT_START,
   UPDATE_SPOT_SUCCESS,
   UPDATE_SPOT_FAILURE,
+  LOAD_USER_SPOTS,
 } from "./spotConstants";
 
 // Sample random locations and image URLs
@@ -110,7 +111,20 @@ export const updateSpotFailure = (error) => ({
   payload: error,
 });
 
+export const loadUserSpots = (spots) => ({
+  type: LOAD_USER_SPOTS,
+  payload: spots,
+});
+
 // Thunks
+
+export const fetchUserSpots = () => async (dispatch) => {
+  const response = await fetch("/api/spots/current");
+  if (response.ok) {
+    const spots = await response.json();
+    dispatch(loadUserSpots(spots));
+  }
+};
 export const updateSpot = (spotId, spotData, imageUrls) => async (dispatch) => {
   dispatch(updateSpotStart());
   try {
@@ -303,6 +317,9 @@ const spotReducer = (state = initialState, action) => {
 
     case UPDATE_SPOT_FAILURE:
       return { ...state, isLoading: false, error: action.payload };
+
+    case LOAD_USER_SPOTS:
+      return { ...state, userSpots: action.spots };
 
     default:
       return state;
