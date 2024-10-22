@@ -243,6 +243,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
     });
     if (response.ok) {
       dispatch(removeSpot(spotId));
+      dispatch(fetchUserSpots()); // Fetch updated user spots
     } else {
       const errorData = await response.json();
       console.error("Error deleting spot:", errorData);
@@ -290,7 +291,11 @@ const spotReducer = (state = initialState, action) => {
         ...state,
         allSpots: newAllSpots,
         singleSpot: null,
+        userSpots: state.userSpots ? state.userSpots.filter(spot => spot.id !== action.payload) : null,
       };
+      
+      case LOAD_USER_SPOTS:
+        return { ...state, userSpots: action.payload };
 
     case SET_SPOT_ERRORS:
       return { ...state, errors: action.payload };
@@ -319,7 +324,7 @@ const spotReducer = (state = initialState, action) => {
       return { ...state, isLoading: false, error: action.payload };
 
     case LOAD_USER_SPOTS:
-      return { ...state, userSpots: action.spots };
+      return { ...state, userSpots: action.payload };
 
     default:
       return state;

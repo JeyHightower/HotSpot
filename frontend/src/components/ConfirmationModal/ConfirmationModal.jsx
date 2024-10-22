@@ -1,34 +1,34 @@
-import React from "react";
-import { Modal } from "../../context/Modal";
-import "./ConfirmationModal.css";
+// ConfirmDeleteModal.jsx
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useModal } from '../../context/Modal';
+import { deleteSpot } from '../../store/spots';
+import './ConfirmationModal.css';
 
-//reusable confirmation modal component
+function ConfirmDeleteModal({ spotId, onDelete }) {
+  const dispatch = useDispatch();
+  const { closeModal } = useModal();
 
-const ConfirmationModal = ({
-    show,
-    title,
-    message,
-    onConfirm,
-    onCancel,
-}) => {
-    return (
-        show && (
-        <Modal onClose={onCancel}>
-            <div className="confirmation-modal">
-                <h2>{title}</h2>
-                <p>{message}</p>
-                <div className="buttons">
-                    <button onClick={onConfirm} className="confirm-button">
-                        Yes
-                    </button>
-                    <button onClick={onCancel} className="cancel-button">
-                        No
-                    </button>
-                </div>
-            </div>
-        </Modal>
-    )
-    );
-};
+  const handleDelete = async () => {
+    await dispatch(deleteSpot(spotId));
+    onDelete(spotId);
+    closeModal();
+  };
 
-export default ConfirmationModal;
+  return (
+    <div className="confirm-delete-modal">
+      <h2>Confirm Delete</h2>
+      <p>Are you sure you want to remove this spot?</p>
+      <div className="button-container">
+        <button className="delete-button" onClick={handleDelete} style={{backgroundColor: 'red', color: 'white'}}>
+          Yes (Delete Spot)
+        </button>
+        <button className="cancel-button" onClick={closeModal} style={{backgroundColor: '#333', color: 'white'}}>
+          No (Keep Spot)
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default ConfirmDeleteModal;

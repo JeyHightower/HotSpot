@@ -2,12 +2,14 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchUserSpots } from '../../store/spots'; // You'll need to create this action
-import './ManageSpots.css'; // Create this CSS file for styling
+import { fetchUserSpots } from '../../store/spots';
+import OpenModalButton from '../OpenModalButton';
+import ConfirmationModal from '../ConfirmationModal';
+import './ManageSpots.css';
 
 function ManageSpots() {
   const dispatch = useDispatch();
-  const history = useNavigate();
+  const navigate = useNavigate();
   const userSpots = useSelector(state => state.spots.userSpots);
   const user = useSelector(state => state.session.user);
 
@@ -22,19 +24,17 @@ function ManageSpots() {
   }
 
   const handleSpotClick = (spotId) => {
-    history.push(`/spots/${spotId}`);
+    navigate(`/spots/${spotId}`);
   };
 
   const handleUpdate = (spotId, event) => {
     event.stopPropagation();
-    // Implement update functionality or navigation
-    console.log('Update spot', spotId);
+    navigate(`/spots/${spotId}/edit`);
   };
 
-  const handleDelete = (spotId, event) => {
-    event.stopPropagation();
-    // Implement delete functionality
-    console.log('Delete spot', spotId);
+  const handleDelete = (deletedSpotId) => {
+    // This will update the Redux store, which will cause a re-render
+    dispatch(fetchUserSpots());
   };
 
   return (
@@ -58,7 +58,11 @@ function ManageSpots() {
               </div>
               <div className="spot-actions">
                 <button onClick={(e) => handleUpdate(spot.id, e)}>Update</button>
-                <button onClick={(e) => handleDelete(spot.id, e)}>Delete</button>
+                <OpenModalButton
+                  buttonText="Delete"
+                  modalComponent={<ConfirmationModal spotId={spot.id} onDelete={handleDelete} />}
+                  onButtonClick={(e) => e.stopPropagation()} // Prevent the spot click event
+                />
               </div>
             </div>
           ))}
