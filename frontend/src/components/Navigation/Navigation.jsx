@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import ProfileButton from './ProfileButton';
-import UserMenu from '../UserMenu';  // Make sure to create this component
+import UserMenu from '../UserMenu';
 import { useModal } from '../../context/Modal';
 import './Navigation.css';
 import logo from '/logo.jpg'; 
@@ -13,12 +13,10 @@ const Navigation = () => {
   const sessionUser = useSelector(state => state.session.user);
   const { setModalContent } = useModal();
 
-  // Handler for opening the login modal
   const handleLogin = () => {
     setModalContent(<LoginFormModal />);
   };
 
-  // Handler for opening the signup modal
   const handleSignUp = () => {
     setModalContent(<SignupFormModal />);
   };
@@ -35,12 +33,9 @@ const Navigation = () => {
           <>
             <NavLink to="/spots/new" className="create-spot-button">Create a New Spot</NavLink>
             <UserMenu user={sessionUser} />
-            {isLoggedIn && (
-              <NavLink to="/spots/current">Manage Spots</NavLink>
-            )}
+            <NavLink to="/spots/current">Manage Spots</NavLink>
           </>
         ) : (
-          // If user is logged out, show Login and Sign Up buttons
           <>
             <button className="login-button" onClick={handleLogin}>Log In</button>
             <button className="signup-button" onClick={handleSignUp}>Sign Up</button>
