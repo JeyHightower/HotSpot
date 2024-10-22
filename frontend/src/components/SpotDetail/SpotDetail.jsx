@@ -22,9 +22,20 @@ const SpotDetail = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Existing useEffect
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
     dispatch(fetchSpotReviews(spotId));
+  }, [dispatch, spotId]);
+
+  // New useEffect to fetch latest data after updates
+  useEffect(() => {
+    const fetchLatestData = async () => {
+      await dispatch(fetchSpotDetails(spotId));
+      await dispatch(fetchSpotReviews(spotId));
+    };
+
+    fetchLatestData();
   }, [dispatch, spotId]);
 
   const handleReserve = () => {
@@ -92,7 +103,7 @@ const SpotDetail = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="spot-detail">
+    <div className="spot -detail">
       {errorMessage && <p className="error">{errorMessage}</p>}
       {spot ? (
         <>
