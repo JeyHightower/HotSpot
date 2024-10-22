@@ -1,107 +1,75 @@
-// src/components/ManageSpots/ManageSpots.jsx
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { fetchSpots, deleteSpot } from "../../store/spots";
-import ConfirmationModal from "../ConfirmationModal";
-import "./ManageSpots.css";
+// src/components/ManageSpots/ManageSpots.js
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { fetchUserSpots } from '../../store/spots';
+import OpenModalButton from '../OpenModalButton';
+import ConfirmationModal from '../ConfirmationModal';
+import './ManageSpots.css';
 
-const ManageSpots = () => {
+function ManageSpots() {
   const dispatch = useDispatch();
-  const history = useNavigate();
-  const currentUser = useSelector((state) => state.session.user);
-  const spots = useSelector((state) => state.spots.allSpots); // Get all spots from the store
+  const navigate = useNavigate();
+  const userSpots = useSelector(state => state.spots.userSpots);
+  const user = useSelector(state => state.session.user);
 
   useEffect(() => {
-    dispatch(fetchSpots()); // Fetch all spots when the component mounts
-  }, [dispatch]);
+    if (user) {
+      dispatch(fetchUserSpots());
+    }
+  }, [dispatch, user]);
 
-  // Filter spots ONLY if currentUser is defined
-  const ownedSpots = currentUser
-    ? Object.values(spots).filter((spot) => spot.ownerId === currentUser.id)
-    : []; // If currentUser is null, set ownedSpots to an empty array
+  if (!user) {
+    return <h2>Please log in to manage your spots.</h2>;
+  }
 
-  //state to control the confirmation modal visibility
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  //state to restore the ID of the spot to be deleted
-  const [spotToDelete, setSpotToDelete] = useState(null);
+  const handleSpotClick = (spotId) => {
+    navigate(`/spots/${spotId}`);
+  };
 
-  // Function to handle deleting a spot
-  const handleDelete = async (spotId) => {
-    await dispatch(deleteSpot(spotId));
-    dispatch(fetchSpots()); // Re-fetch spots after deletion to update the list
+  const handleUpdate = (spotId, event) => {
+    event.stopPropagation();
+    navigate(`/spots/${spotId}/edit`);
+  };
+
+  const handleDelete = (deletedSpotId) => {
+    // This will update the Redux store, which will cause a re-render
+    dispatch(fetchUserSpots());
   };
 
   return (
-    <div className="manage-spots-container">
-      <h2>Manage Spots</h2>
-
-      {/* Conditionally render content based on whether the user has spots */}
-      {ownedSpots.length > 0 ? (
-        // If the user has spots, display them in a list
-        <ul className="spot-list">
-          {ownedSpots.map((spot) => (
-            <li key={spot.id} className="spot-item">
-              <Link to={`/spots/${spot.id}`} className="spot-link">
-                <img
-                  src={spot.previewImage}
-                  alt={spot.name}
-                  className="spot-image"
-                />
-                <div className="spot-info">
-                  <h3>{spot.name}</h3>
-                  <p>
-                    {spot.city}, {spot.state}
-                  </p>
-                  {/* Display average rating (you might need to adjust based on your backend) */}
-                  <p>
-                    <i className="star-icon">★</i>
-                    {spot.avgRating ? spot.avgRating.toFixed(1) : "New"}
-                  </p>
-                  <p>${spot.price}/night</p>
-                </div>
-              </Link>
-
-              {/* "Update" and "Delete" buttons */}
-              <div className="spot-actions">
-                <button onClick={() => history.push(`/spots/${spot.id}/edit`)}>
-                  Update
-                </button>
-                <button
-                  onClick={() => {
-                    setSpotToDelete(spot.id); // Set the spot to be deleted
-                    setShowDeleteModal(true); // Open the confirmation modal
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+    <div className="manage-spots">
+      <h1>Manage Spots</h1>
+      {userSpots.length === 0 ? (
+        <Link to="/spots/new">Create a New Spot</Link>
       ) : (
-        // If the user has no spots, display a message and a link to create a spot
-        <div className="no-spots-message">
-          <p>You do Not have any spots yet.</p>
-          <Link to="/spots/create" className="create-spot-link">
-            Create a New Spot
-          </Link>
+        <div className="spot-list">
+          {userSpots.map(spot => (
+            <div 
+              key={spot.id} 
+              className="spot-tile" 
+              onClick={() => handleSpotClick(spot.id)}
+            >
+              <img src={spot.previewImage} alt={spot.name} />
+              <div className="spot-info">
+                <p>{spot.city}, {spot.state}</p>
+                <p>★ {spot.avgRating ? spot.avgRating.toFixed(1) : 'New'}</p>
+                <p>${spot.price} night</p>
+              </div>
+              <div className="spot-actions">
+                <button onClick={(e) => handleUpdate(spot.id, e)}>Update</button>
+                <OpenModalButton
+                  buttonText="Delete"
+                  modalComponent={<ConfirmationModal spotId={spot.id} onDelete={handleDelete} />}
+                  onButtonClick={(e) => e.stopPropagation()} // Prevent the spot click event
+                />
+              </div>
+            </div>
+          ))}
         </div>
       )}
-
-      {/* Confirmation Modal for deleting a spot */}
-      <ConfirmationModal
-        show={showDeleteModal}
-        title="Confirm Delete"
-        message="Are you sure you want to remove this spot?"
-        onConfirm={async () => {
-          await handleDelete(spotToDelete);
-          setShowDeleteModal(false);
-        }}
-        onCancel={() => setShowDeleteModal(false)}
-      />
     </div>
   );
-};
+}
 
 export default ManageSpots;

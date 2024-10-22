@@ -1,0 +1,64 @@
+.home-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.spot-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.spot-tile {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.spot-tile:hover {
+  transform: translateY(-5px);
+}
+
+.spot-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.spot-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.spot-location {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.spot-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.star {
+  color: #FF385C;
+  margin-right: 5px;
+}
+
+.spot-price {
+  font-weight: bold;
+  margin-top: auto;
+}
+
+.night {
+  font-weight: normal;
+}

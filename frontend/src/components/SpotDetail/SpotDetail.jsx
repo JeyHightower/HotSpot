@@ -1,192 +1,233 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSpotDetails } from "../../store/spots";
-import { fetchUserReviews, deleteReview } from "../../store/reviews"; // Import the thunk to fetch user reviews
-import ReviewForm from "../ReviewForm/ReviewForm";
-import ConfirmationModal from "../ConfirmationModal";
+import { fetchSpotDetails, deleteSpot } from "../../store/spots";
+import { fetchSpotReviews, createReview } from "../../store/reviews";
+import { FaStar } from "react-icons/fa";
+
+import ReviewFormModal from "../ReviewFormModal";
+import EditSpotForm from "../EditSpotForm";
+import OpenModalButton from "../OpenModalButton";
 import "./SpotDetail.css";
 
 const SpotDetail = () => {
   const { spotId } = useParams();
-  const history = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const spot = useSelector((state) => state.spots.singleSpot);
+  const reviews = useSelector((state) => state.reviews.spotReviews);
+  const isLoading = useSelector((state) => state.spots.isLoading);
+  const error = useSelector((state) => state.spots.error);
+  const sessionUser = useSelector((state) => state.session.user);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // State variables
-  const [reviews, setReviews] = useState([]);
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [hasPostedReview, setHasPostedReview] = useState(false);
-  const [showDeleteReviewModal, setShowDeleteReviewModal] = useState(false);
-  const [reviewToDelete, setReviewToDelete] = useState(null);
-
-  // Get spot data from the Redux store
-  const spot = useSelector((state) => state.spots[spotId]);
-  // Get the current user from the Redux store
-  const currentUser = useSelector((state) => state.session.user);
-
-  // Fetch spot details and reviews when the component mounts or spotId changes
+  // Existing useEffect
   useEffect(() => {
-    const fetchSpotAndReviews = async () => {
-      try {
-        const spotData = await dispatch(fetchSpotDetails(spotId));
-        setReviews(spotData.Reviews);
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          history.push("/not-found");
-        } else {
-          console.error("Error fetching spot details:", error);
-        }
-      }
-    };
-    fetchSpotAndReviews();
-  }, [dispatch, history, spotId]);
+    dispatch(fetchSpotDetails(spotId));
+    dispatch(fetchSpotReviews(spotId));
+  }, [dispatch, spotId]);
 
-  // Fetch user reviews to check if the user has already reviewed the spot
+  // New useEffect to fetch latest data after updates
   useEffect(() => {
-    const fetchCurrentUserReviews = async () => {
-      if (currentUser) {
-        const userReviewData = await dispatch(fetchUserReviews());
-
-        // Check if the user has a review for this spot
-        const hasReview = userReviewData.some(
-          (review) => review.spotId === +spotId
-        );
-        setHasPostedReview(hasReview);
-      }
+    const fetchLatestData = async () => {
+      await dispatch(fetchSpotDetails(spotId));
+      await dispatch(fetchSpotReviews(spotId));
     };
-    fetchCurrentUserReviews();
-  }, [currentUser, history, dispatch, spotId]);
 
-  // While waiting for the spot data, display a loading message
-  if (!spot) {
-    return <div>Loading...</div>;
-  }
+    fetchLatestData();
+  }, [dispatch, spotId]);
 
-  // Determine if the current user is the owner of the spot
-  const isOwner =
-    spot && spot.Owner && currentUser && currentUser.id === spot.Owner.id;
-
-  // Determine if the user can post a review
-  const canPostReview = currentUser && !isOwner && !hasPostedReview;
-
-  // Function to handle refreshing spot details after a new review is submitted
-  const handleReviewSubmit = async () => {
-    await dispatch(fetchSpotDetails(spotId)); // Re-fetch spot details to include the new review
+  const handleReserve = () => {
+    alert("Feature coming soon");
   };
 
-  //function to handle deleting a review
-  const handleDeleteReview = async (reviewId) => {
-    await dispatch(deleteReview(reviewId));
-    await dispatch(fetchSpotDetails(spotId));
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this spot?")) {
+      await dispatch(deleteSpot(spotId));
+      navigate("/");
+    }
   };
+
+  const renderRatingInfo = () => {
+    if (!spot) return null;
+
+    if (spot.numReviews === 0) {
+      return (
+        <>
+          <FaStar /> New
+        </>
+      );
+    } else {
+      return (
+        <>
+          <FaStar />
+          {spot.avgRating ? spot.avgRating.toFixed(1) : "N/A"}
+          <span className="centered-dot"> · </span>
+          {spot.numReviews} {spot.numReviews === 1 ? "Review" : "Reviews"}
+        </>
+      );
+    }
+  };
+
+  const sortedReviews = reviews
+    ? [...reviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    : [];
+
+  const userCanReview =
+    sessionUser &&
+    spot &&
+    sessionUser.id !== spot.Owner.id &&
+    !sortedReviews.some((review) => review.User.id === sessionUser.id);
+
+  const handleReviewSubmit = async (reviewData) => {
+    try {
+      setErrorMessage(""); // Clear any previous error messages
+      const newReview = await dispatch(createReview(spotId, reviewData));
+      if (newReview) {
+        // Refresh the spot details and reviews
+        await dispatch(fetchSpotDetails(spotId));
+        await dispatch(fetchSpotReviews(spotId));
+      } else {
+        setErrorMessage("Failed to submit review. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      setErrorMessage(
+        "An error occurred while submitting your review. Please try again later."
+      );
+    }
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="spot-detail-container">
-      {/* Container for the spot details */}
-      <div className="spot-details">
-        <h2>{spot.name}</h2>
-        <p>
-          Location: {spot.city}, {spot.state}
-        </p>
-        <p className="description">{spot.description}</p>
-        <h3>
-          ${spot.price} <span>night</span>
-        </h3>
+    <div className="spot -detail">
+      {errorMessage && <p className="error">{errorMessage}</p>}
+      {spot ? (
+        <>
+          <h1>{spot.name}</h1>
+          <p>
+            {spot.city}, {spot.state}, {spot.country}
+          </p>
 
-        {/* Display the average rating and review count */}
-        <div className="rating-summary">
-          <i className="star-icon">★</i>
-          {spot.avgStarRating ? spot.avgStarRating.toFixed(1) : "New"}
-          {spot.numReviews > 0 && (
-            <>
-              <span className="dot-separator"> · </span>
-              <span>
-                {spot.numReviews} {spot.numReviews === 1 ? "Review" : "Reviews"}
-              </span>
-            </>
-          )}
-        </div>
+          <div className="image-gallery">
+            {spot.SpotImages && spot.SpotImages.length > 0 && (
+              <>
+                <img
+                  className="large-image"
+                  src={spot.SpotImages[0].url}
+                  alt="Main spot"
+                />
+                <div className="small-images">
+                  {spot.SpotImages.slice(1, 5).map((image, index) => (
+                    <img
+                      key={index}
+                      src={image.url}
+                      alt={`Spot ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
 
-        {/* Button to redirect to reservation form (assuming you have a /reserve route) */}
-        <button onClick={() => history.push(`/spots/${spot.id}/reserve`)}>
-          Reserve
-        </button>
-      </div>
+          <div className="spot-info">
+            <div className="host-description">
+              <h2>
+                Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}
+              </h2>
+              <p>{spot.description}</p>
+            </div>
 
-      {/* Container for the spot images */}
-      <div className="images">
-        {spot.SpotImages.map((image, index) => (
-          <img
-            key={index}
-            src={image.url}
-            alt={`${spot.name} - Image ${index}`}
-          />
-        ))}
-      </div>
+            <div className="spot-features">
+              <h2>Features:</h2>
+              <ul>
+                {spot.features &&
+                  spot.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+              </ul>
+            </div>
 
-      {/* Container for the reviews section */}
-      <div className="reviews-section">
-        <h3>Reviews</h3>
+            <div className="spot-rules">
+              <h2>House Rules:</h2>
+              <ul>
+                {spot.rules &&
+                  spot.rules.map((rule, index) => <li key={index}>{rule}</li>)}
+              </ul>
+            </div>
+          </div>
 
-        {/* Conditionally render the "Post Your Review" button */}
-        {canPostReview && (
-          <button onClick={() => setShowReviewForm(true)}>
-            Post Your Review
-          </button>
-        )}
+          <div className="reviews-section">
+            <h2>{renderRatingInfo()}</h2>
 
-        {/* Conditionally render the ReviewForm modal */}
-        {showReviewForm && (
-          <ReviewForm
-            spotId={spotId}
-            onClose={() => setShowReviewForm(false)}
-            onReviewSubmit={handleReviewSubmit}
-          />
-        )}
+            {sortedReviews.length > 0 ? (
+              sortedReviews.map((review) => (
+                <div key={review.id} className="review">
+                  <p>{review.User.firstName}</p>
+                  <p>
+                    {new Date(review.createdAt).toLocaleString("default", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                  <p>{review.review}</p>
+                  <p>
+                    <FaStar /> {review.stars}
+                  </p>
+                </div>
+              ))
+            ) : userCanReview ? (
+              <div>
+                <p>Be the first to post a review!</p>
+                <OpenModalButton
+                  buttonText="Write a review"
+                  modalComponent={
+                    <ReviewFormModal
+                      spotId={spotId}
+                      onReviewSubmit={handleReviewSubmit}
+                    />
+                  }
+                />
+              </div>
+            ) : (
+              <p>No reviews yet</p>
+            )}
+            {sessionUser &&
+              sessionUser.id !== spot.Owner.id &&
+              !sortedReviews.some(
+                (review) => review.User.id === sessionUser.id
+              ) && (
+                <OpenModalButton
+                  buttonText="Post Your Review"
+                  modalComponent={
+                    <ReviewFormModal
+                      spotId={spotId}
+                      onReviewSubmit={handleReviewSubmit}
+                    />
+                  }
+                />
+              )}
+          </div>
 
-        {/* Display the reviews */}
-        {reviews.length > 0 ? (
-          reviews.map((review) => (
-            <div key={review.id} className="review">
-              <p>
-                <i className="star-icon">★</i>
-                {review.rating} / 5
-              </p>
-              <p>{review.review}</p>
-              <p>
-                — {review.User.username} on{" "}
-                {review.createdAt.toLocaleDateString()}
-              </p>
-
-              {/* Conditionally render the "Delete" button for each review */}
-              {currentUser && review.userId === currentUser.id && (
-                <button
-                  onClick={() => {
-                    setReviewToDelete(review.id);
-                    setShowDeleteReviewModal(true);
-                  }}
-                >
-                  Delete
-                </button>
+          {sessionUser && sessionUser.id === spot.Owner.id && (
+            <div className="owner-actions">
+              <button onClick={handleDelete}>Delete Spot</button>
+              <button onClick={() => setShowEditForm(true)}>Edit Spot</button>
+              {showEditForm && (
+                <EditSpotForm
+                  spot={spot}
+                  onClose={() => setShowEditForm(false)}
+                />
               )}
             </div>
-          ))
-        ) : (
-          <p>Be the first to review this spot!</p>
-        )}
-
-        {/* Confirmation Modal for deleting a review */}
-        <ConfirmationModal
-          show={showDeleteReviewModal}
-          title="Confirm Delete"
-          message="Are you sure you want to delete this review?"
-          onConfirm={async () => {
-            await handleDeleteReview(reviewToDelete);
-            setShowDeleteReviewModal(false);
-          }}
-          onCancel={() => setShowDeleteReviewModal(false)}
-        />
-      </div>
+          )}
+        </>
+      ) : (
+        <p>Spot not found</p>
+      )}
     </div>
   );
 };

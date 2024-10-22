@@ -1,6 +1,5 @@
 import React from 'react';
 import { useModal } from '../../context/Modal';
-import PropTypes from 'prop-types';
 
 function OpenModalMenuItem({
   modalComponent, // component to render inside the modal
@@ -13,19 +12,12 @@ function OpenModalMenuItem({
   const onClick = () => {
     if (onModalClose) setOnModalClose(onModalClose);
     setModalContent(modalComponent);
-    if (typeof onItemClick === "function") onItemClick();
+    if (onItemClick) onItemClick();
   };
 
   return (
-    <li onClick={onClick}>{itemText}</li>
+    <button onClick={onClick}>{itemText}</button>
   );
 }
-
-OpenModalMenuItem.propTypes = {
-  modalComponent: PropTypes.element.isRequired, // Changed to PropTypes.element
-  itemText: PropTypes.string.isRequired,
-  onItemClick: PropTypes.func,
-  onModalClose: PropTypes.func
-};
 
 export default OpenModalMenuItem;

@@ -68,3 +68,8 @@
 .login-form-container button:nth-child(2) { /* Selects the second button */
   background-color: #6c757d; /* Example - Customize! */
 }
+
+.error {
+  color: red;
+  font-weight: bold;
+}

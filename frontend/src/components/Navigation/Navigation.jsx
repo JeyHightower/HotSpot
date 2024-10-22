@@ -1,81 +1,49 @@
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import PropTypes from "prop-types";
-import ProfileButton from "./ProfileButton";
-import { Modal } from "../../context/Modal";
-import OpenModalMenuItem from "./OpenModalMenuItem";
-import LoginFormModal from "../LoginFormModal";
-import SignupFormModal from "../SignupFormModal";
-import "./Navigation.css";
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import LoginFormModal from '../LoginFormModal';
+import SignupFormModal from '../SignupFormModal';
+import ProfileButton from './ProfileButton';
+import UserMenu from '../UserMenu';
+import { useModal } from '../../context/Modal';
+import './Navigation.css';
+import logo from '/logo.jpg'; 
 
-function Navigation({ isLoaded }) {
-  const sessionUser  = useSelector((state) => state.session.user);
-  const navigate = useNavigate();
+const Navigation = () => {
+  const sessionUser = useSelector(state => state.session.user);
+  const { setModalContent } = useModal();
 
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignupModal, setShowSignupModal] = useState(false);
+  const handleLogin = () => {
+    setModalContent(<LoginFormModal />);
+  };
 
-  let sessionLinks;
-  if (sessionUser ) {
-    sessionLinks = (
-      <ul>
-        <li>
-          <button onClick={() => navigate("/spots/create")}>
-            Create a New Spot
-          </button>
-        </li>
-        <li>
-          <NavLink to="/spots/manage">Manage Spots</NavLink>
-        </li>
-        <li>
-          <ProfileButton user={sessionUser } />
-        </li>
-      </ul>
-    );
-  } else {
-    sessionLinks = (
-      <ul>
-        <OpenModalMenuItem
-          itemText="Log In"
-          modalComponent={<LoginFormModal />}
-          onItemClick={() => setShowLoginModal(true)}
-        />
-        <OpenModalMenuItem
-          itemText="Sign Up"
-          modalComponent={<SignupFormModal />}
-          onItemClick={() => setShowSignupModal(true)}
-        />
-      </ul>
-    );
-  }
+  const handleSignUp = () => {
+    setModalContent(<SignupFormModal />);
+  };
 
   return (
-    <nav className="navigation-container">
+    <nav className="navigation">
       <div className="nav-left">
-        <NavLink to="/" className="logo-link">
-          <img src="path_to_your_logo_image" alt="HotSpot" className="logo" />
-        </NavLink>
+        <Link to="/" className="nav-logo">
+          <img src={logo} alt="Company Logo" className="logo-image" />
+        </Link>
       </div>
-      <ul className="nav-right">{isLoaded && sessionLinks}</ul>
-
-      {/* Conditionally render modals for login and signup */}
-      {showLoginModal && (
-        <Modal onClose={() => setShowLoginModal(false)} show={showLoginModal}>
-          <LoginFormModal />
-        </Modal>
-      )}
-      {showSignupModal && (
-        <Modal onClose={() => setShowSignupModal(false)} show={showSignupModal}>
-          <SignupFormModal />
-        </Modal>
-      )}
+      <div className="nav-right">
+        {sessionUser ? (
+          <>
+            <NavLink to="/spots/new" className="create-spot-button">Create a New Spot</NavLink>
+            <UserMenu user={sessionUser} />
+            <NavLink to="/spots/current">Manage Spots</NavLink>
+          </>
+        ) : (
+          <>
+            <button className="login-button" onClick={handleLogin}>Log In</button>
+            <button className="signup-button" onClick={handleSignUp}>Sign Up</button>
+          </>
+        )}
+      </div>
     </nav>
   );
-}
-
-Navigation.propTypes = {
-  isLoaded: PropTypes.bool.isRequired,
 };
 
 export default Navigation;

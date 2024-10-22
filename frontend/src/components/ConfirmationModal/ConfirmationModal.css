@@ -1,0 +1,60 @@
+/* ConfirmationModal.css */
+
+.confirm-delete-modal {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .confirm-delete-modal h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .confirm-delete-modal p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .delete-button,
+  .cancel-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: opacity 0.2s ease;
+  }
+  
+  .delete-button {
+    background-color: #ff0000;
+    color: white;
+  }
+  
+  .cancel-button {
+    background-color: #333;
+    color: white;
+  }
+  
+  .delete-button:hover,
+  .cancel-button:hover {
+    opacity: 0.8;
+  }
+  
+  .delete-button:focus,
+  .cancel-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  }

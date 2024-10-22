@@ -1,0 +1,41 @@
+/* src/components/CreateSpotForm/CreateSpotForm.css */
+
+.create-spot-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .create-spot-form h1 {
+    text-align: center;
+  }
+  
+  .create-spot-form section {
+    margin-bottom: 20px;
+  }
+  
+  .create-spot-form label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .create-spot-form input,
+  .create-spot-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .create-spot-form button[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .create-spot-form button[type="submit"]:hover {
+    background-color: #3e8e41;
+  }

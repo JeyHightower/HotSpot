@@ -1,20 +1,12 @@
-import { React, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-  NavLink,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Navigation from "./components/Navigation/Navigation";
-import * as sessionActions from "./store/session";
-import "./index.css";
-import HomePage from "./components/Homepage";
+import Home from "./components/Home";
 import SpotDetail from "./components/SpotDetail";
-import SpotForm from "./components/SpotForm/SpotForm";
-import ManageSpots from "./components/ManageSpots/ManageSpots";
-import ProtectedRoute from "./components/ProtectedRoute"
-import UpdateSpotForm from "./components/UpdateSpotForm";
+import CreateSpotForm from "./components/CreateSpotForm/CreateSpotForm"; // Import the new component
+import * as sessionActions from "./store/session";
+import ManageSpots from "./components/ManageSpots";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -26,14 +18,8 @@ function Layout() {
 
   return (
     <>
-      <header className="app-header">
-        <NavLink to="/" className="app-logo">
-          {/* Add your app logo here */}
-          HOTSPOTS
-        </NavLink>
-        <Navigation isLoaded={isLoaded} />
-      </header>
-      <main>{isLoaded && <Outlet />}</main>
+      <Navigation isLoaded={isLoaded} />
+      {isLoaded && <Outlet />}
     </>
   );
 }
@@ -44,24 +30,20 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <HomePage />,
+        element: <Home />,
       },
       {
         path: "/spots/:spotId",
         element: <SpotDetail />,
       },
       {
-        path: "/spots/create",
-        element: <SpotForm />,
+        path: "/spots/new",
+        element: <CreateSpotForm />,
       },
       {
         path: "/spots/manage",
-        element: <ProtectedRoute component={ManageSpots} />,
-      },
-      {
-        path: "/spots/:spotId/edit",
-        element: <ProtectedRoute component={UpdateSpotForm} />,
-      },
+        element: <ManageSpots />,
+      }
     ],
   },
 ]);

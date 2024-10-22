@@ -1,106 +1,142 @@
-.navigation-container {
-  width: 100%;
-  background-color: #fff; /* Example: White background */
-  padding: 1rem 2rem; /* Example: Padding around the header */
+.navigation {
   display: flex;
-  justify-content: space-between; /* Position logo and buttons */
+  justify-content: space-between;
   align-items: center;
-  position: fixed; /* Make the header sticky */
-  top: 0;
-  left: 0;
-  z-index: 100; /* Ensure header is above other content */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+  padding: 1rem;
+  background-color: #f8f9fa;
 }
 
 .nav-left {
-  /* Style the logo container */
+  display: flex;
+  align-items: center;
 }
 
-.logo-link {
-  /* Remove underline from the link */
+.nav-logo {
+  display: flex;
+  align-items: center;
   text-decoration: none;
 }
 
-.logo {
-  height: 40px;  /* Adjust logo height as needed */
+.nav-links {
+  display: flex;
+  list-style-type: none;
+}
+.logo-image {
+  height: 40px; /* Adjust this value to fit your logo size */
+  width: auto;
+}
+.nav-links li {
+  margin-right: 1rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+
+
+.login-button, .menu-button {
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.menu-container {
+  position: relative;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.profile-dropdown li {
+  list-style-type: none;
+  padding: 0.5rem 0;
+}
+
+.profile-dropdown button {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+}
+
+.profile-dropdown button:hover {
+  background-color: #f8f9fa;
+}
+
+
+.nav-left .nav-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-left .logo-image {
+  height: 40px;
+  margin-right: 10px;
 }
 
 .nav-right {
   display: flex;
   align-items: center;
-  list-style: none; /* Remove list bullets */
-  margin: 0;
-  padding: 0;
 }
 
-.nav-right li {
-  margin-left: 2rem; /* Add spacing between nav items */
-}
-
-.nav-right a { 
-  text-decoration: none; /* Remove link underlines */
-  color: #333; /* Example link color */
-  font-weight: 500; /* make link txt bolder*/
-  transition: color 0.2s ease; /*smooth color transition*/
-}
-
-.nav-right a:hover {
-  color: #007bff; /* Change link color on hover */
-}
-
-/* Media Query for Responsiveness (Adjust breakpoint as needed)*/
-@media (max-width: 768px) {
-  .navigation-container {
-    padding: 1rem; /* Reduce padding on smaller screens */
-  }
-
-  .nav-right li {
-    margin-left: 1.5rem; /* Reduce spacing between items */
-  }
-
-  .logo {
-    height: 30px; /* Make logo smaller */
-  }
-}
-
-/* Profile Dropdown */
-.profile-dropdown {
-  position: absolute; /* Position the dropdown relative to the parent (button) */
-  top: 100%; /* Position it below the button */
-  right: 0; /* Align to the right of the button */
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  padding: 1rem;
-  z-index: 10; /* Ensure it appears above other content */
-  list-style: none; /* Remove bullet points */
-  padding: 0;
-  width: 200px; /* Adjust width as needed */
-}
-
-.profile-dropdown.hidden {
-  display: none; /* Hide the dropdown when not active */
-}
-
-.profile-dropdown li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee; /* Add a separator between items */
-}
-
-.profile-dropdown li:last-child {
-  border-bottom: none; /* Remove separator from last item */
-}
-
-.profile-dropdown button {
-  background-color: transparent; /* Make logout button look like a link */
+.login-button,
+.signup-button {
+  padding: 8px 16px;
+  margin-left: 10px;
   border: none;
-  padding: 0;
-  font-size: 1rem;
-  color: #333;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
-.profile-dropdown button:hover {
-  text-decoration: underline;
+.login-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.signup-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.login-button:hover {
+  background-color: #e0e0e0;
+}
+
+.signup-button:hover {
+  background-color: #45a049;
+}
+
+.create-spot-button {
+  text-decoration: none;
+  padding: 10px 15px;
+  background-color: #ff5a5f;
+  color: white;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.create-spot-button:hover {
+  background-color: #ff7e82;
 }

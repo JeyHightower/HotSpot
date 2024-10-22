@@ -1,39 +1,36 @@
 .spot-card {
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    overflow: hidden; /* Hide image overflow for clean edges */
-    text-decoration: none; /* Remove link underline */
-    color: inherit; /* Inherit color from parent */
-  }
-  
-  .spot-card-image {
-    height: 200px; /* Adjust height as needed */
-  }
-  
-  .spot-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Cover the entire container */
-  }
-  
-  .spot-card-details {
-    padding: 1rem;
-  }
-  
-  .spot-card-name {
-    font-weight: bold;
-  }
-  
-  .spot-card-rating {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .star-icon {
-    color: orange; 
-  }
-  
-  .spot-card-price {
-    margin-top: 0.5rem;
-    font-weight: bold;
-  }
+  width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.spot-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.spot-info {
+  padding: 10px;
+}
+
+.spot-location {
+  font-weight: bold;
+}
+
+.spot-rating {
+  color: #ff385c;
+}
+
+.spot-price {
+  font-weight: bold;
+}
+
+.spot-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Adjust as needed for spacing between star and number */
+}
