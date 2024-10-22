@@ -1,9 +1,9 @@
-// ConfirmDeleteModal.jsx
+// ConfirmationModal.jsx
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import { deleteSpot } from '../../store/spots';
-import { deleteReview } from '../../store/reviews'; // Assume this action exists
+import { deleteReview } from '../../store/reviews';
 import './ConfirmationModal.css';
 
 function ConfirmationModal({ spotId, reviewId, onDelete, type }) {
@@ -21,7 +21,7 @@ function ConfirmationModal({ spotId, reviewId, onDelete, type }) {
     closeModal();
   };
 
-  const title = type === 'spot' ? 'Confirm Delete' : 'Confirm Delete Review';
+  const title = 'Confirm Delete';
   const message = type === 'spot' 
     ? 'Are you sure you want to remove this spot?'
     : 'Are you sure you want to delete this review?';
@@ -33,10 +33,10 @@ function ConfirmationModal({ spotId, reviewId, onDelete, type }) {
       <h2>{title}</h2>
       <p>{message}</p>
       <div className="button-container">
-        <button className="delete-button" onClick={handleDelete} style={{backgroundColor: 'red', color: 'white'}}>
+        <button className="yes-button" onClick={handleDelete} style={{backgroundColor: 'red', color: 'white'}}>
           {confirmText}
         </button>
-        <button className="cancel-button" onClick={closeModal} style={{backgroundColor: '#333', color: 'white'}}>
+        <button className="no-button" onClick={closeModal} style={{backgroundColor: '#333', color: 'white'}}>
           {cancelText}
         </button>
       </div>
