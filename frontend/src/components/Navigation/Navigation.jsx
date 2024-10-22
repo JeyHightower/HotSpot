@@ -35,6 +35,9 @@ const Navigation = () => {
           <>
             <NavLink to="/spots/new" className="create-spot-button">Create a New Spot</NavLink>
             <UserMenu user={sessionUser} />
+            {isLoggedIn && (
+              <NavLink to="/spots/current">Manage Spots</NavLink>
+            )}
           </>
         ) : (
           // If user is logged out, show Login and Sign Up buttons
