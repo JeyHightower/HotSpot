@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSpotDetails, deleteSpot } from "../../store/spots";
-import { fetchSpotReviews } from "../../store/reviews";
+import { fetchSpotReviews, createReview } from "../../store/reviews";
 import { FaStar } from "react-icons/fa";
-import ReviewForm from "../ReviewForm";
+
+import ReviewFormModal from "../ReviewFormModal";
 import EditSpotForm from "../EditSpotForm";
+import OpenModalButton from "../OpenModalButton";
 import "./SpotDetail.css";
 
 const SpotDetail = () => {
@@ -19,6 +21,7 @@ const SpotDetail = () => {
   const sessionUser = useSelector((state) => state.session.user);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -72,6 +75,23 @@ const SpotDetail = () => {
     dispatch(fetchSpotReviews(spotId));
   };
 
+  const handleReviewSubmit = async (reviewData) => {
+    try {
+      setErrorMessage(''); // Clear any previous error messages
+      const newReview = await dispatch(createReview(spotId, reviewData));
+      if (newReview) {
+        // Refresh the spot details and reviews
+        dispatch(fetchSpotDetails(spotId));
+        dispatch(fetchSpotReviews(spotId));
+      } else {
+        setErrorMessage('Failed to submit review. Please try again.');
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      setErrorMessage('An error occurred while submitting your review. Please try again later.');
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -81,7 +101,7 @@ const SpotDetail = () => {
         <>
           <h1>{spot.name}</h1>
           <p>
-            {spot.city}, {spot.state}, {spot.country}
+            {spot.city}, {spot .state}, {spot.country}
           </p>
 
           <div className="image-gallery">
@@ -154,15 +174,15 @@ const SpotDetail = () => {
             ) : userCanReview ? (
               <div>
                 <p>Be the first to post a review!</p>
-                <button onClick={() => setShowReviewForm(true)}>
-                  Write a review
-                </button>
-                {showReviewForm && (
-                  <ReviewForm
-                    spotId={spotId}
-                    onReviewCreated={handleReviewCreated}
-                  />
-                )}
+                <OpenModalButton
+                  buttonText="Write a review"
+                  modalComponent={
+                    <ReviewFormModal
+                      spotId={spotId}
+                      onReviewSubmit={handleReviewSubmit}
+                    />
+                  }
+                />
               </div>
             ) : (
               <p>No reviews yet</p>
@@ -172,9 +192,15 @@ const SpotDetail = () => {
               !sortedReviews.some(
                 (review) => review.User.id === sessionUser.id
               ) && (
-                <button onClick={() => setShowReviewForm(true)}>
-                  Post Your Review
-                </button>
+                <OpenModalButton
+                  buttonText="Post Your Review"
+                  modalComponent={
+                    <ReviewFormModal
+                      spotId={spotId}
+                      onReviewSubmit={handleReviewSubmit}
+                    />
+                  }
+                />
               )}
           </div>
 

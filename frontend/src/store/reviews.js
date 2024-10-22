@@ -118,7 +118,7 @@ const reviewsReducer = (state = initialState, action) => {
       return {
         ...state,
         userReviews: [action.payload, ...state.userReviews],
-        spotReviews: [action .payload, ...state.spotReviews],
+        spotReviews: [action.payload, ...state.spotReviews],
         reviewErrors: null,
       };
     case SET_REVIEW_ERRORS:
